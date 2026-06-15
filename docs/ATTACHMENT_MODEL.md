@@ -46,11 +46,30 @@ The chunks include:
 - plaintext digest;
 - encrypted-byte digest.
 
+## Attachment references
+
+The `AttachmentReference` type summarizes an encrypted attachment package for inclusion inside a sealed message payload.
+
+A reference includes:
+
+- attachment reference version;
+- attachment package version;
+- attachment identifier;
+- file name;
+- media type;
+- total size;
+- chunk count;
+- plaintext digest;
+- manifest digest;
+- package digest.
+
+The `AttachmentMessagePayload` type wraps optional message text with an attachment reference. This payload is intended to be encrypted by the message layer before relay use.
+
 ## Security boundary
 
-The manifest currently contains fields such as file name and media type. Those fields must be carried inside an encrypted message payload before use with a relay.
+The manifest and reference currently contain fields such as file name and media type. Those fields must be carried inside an encrypted message payload before use with a relay.
 
-The relay should not receive the manifest as plaintext.
+The relay should not receive the manifest or reference as plaintext.
 
 Future relay integration should send only encrypted bytes and opaque references through relay-facing APIs.
 
@@ -62,11 +81,10 @@ Long text bodies should remain message content when practical. Very large text, 
 
 The next implementation steps are:
 
-1. Add an attachment reference type for sealed message payloads.
-2. Add local encrypted attachment storage.
-3. Add relay transfer tests using opaque attachment references.
-4. Add UI preview states for queued and received attachments.
-5. Wire the desktop playground to send and receive attachment references after tests exist.
+1. Add local encrypted attachment storage.
+2. Add relay transfer tests using opaque attachment references.
+3. Add UI preview states for queued and received attachments.
+4. Wire the desktop playground to send and receive attachment references after tests exist.
 
 ## Limitations
 
