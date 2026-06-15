@@ -6,6 +6,7 @@ from typing import Any
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from .app_store import AppStore
@@ -80,6 +81,13 @@ class LocalApiService:
 
 def create_app(service: LocalApiService) -> FastAPI:
     app = FastAPI(title="LeftLevel Local API", version="0.1")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["http://127.0.0.1:5173", "http://localhost:5173", "http://127.0.0.1:8000", "http://localhost:8000"],
+        allow_credentials=False,
+        allow_methods=["GET", "POST", "OPTIONS"],
+        allow_headers=["Content-Type"],
+    )
 
     def handle(fn):
         try:
