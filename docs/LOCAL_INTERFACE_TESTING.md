@@ -6,7 +6,7 @@ This guide explains how to view the current LeftLevel desktop playground and how
 
 The interface is now more than a static mockup, but it is still a playground. It can show contacts, trust states, message history, local setup status, Add friend actions, composer behavior, attachment queue states, and attachment integrity states.
 
-The interface can call the local API for encrypted store creation, setup readiness, prototype Add friend actions, message send, and message receive when the local API and test relay are running.
+The interface can call the local API for encrypted store creation, setup readiness, one-click test friend creation, prototype Add friend actions, message send, and message receive when the local API and test relay are running.
 
 It is not yet a packaged desktop app and should not be used for sensitive real-world messages.
 
@@ -68,6 +68,7 @@ Expected behavior:
 
 - the playground detects the local API;
 - Open encrypted store creates the configured local vault if it is missing;
+- Create test friend creates a verified local test pair for development;
 - the local setup panel shows store readiness and contact count;
 - message history comes from the encrypted local app store after contacts exist;
 - Send uses the local API message endpoint;
@@ -86,6 +87,14 @@ Expected statuses:
 - `already_exists`: the encrypted store already exists;
 - failure message: the local API could not create or open the configured store.
 
+## Create test friend
+
+The Create test friend button calls the local API test friend endpoint.
+
+This creates a local two-sided test pair in the encrypted store so the playground can be tested without manual invite and response copy/paste.
+
+This is for development and local interface testing only. A real friend still requires the Add friend invite flow and safety-number verification.
+
 ## Prototype Add friend panel
 
 The Add friend panel can call local API prototype actions through visible fields instead of browser prompt dialogs.
@@ -99,11 +108,12 @@ Fields:
 
 Actions:
 
+- Create test friend: creates a local verified test pair for development;
 - Create friend invite: creates a local invite and pending encrypted draft, fills the invite ID and invite JSON fields, and prints JSON for copy/paste testing;
 - Accept friend invite: reads the friend name and invite JSON fields, saves a contact, fills the response JSON field, and prints response JSON;
 - Finish adding friend: reads the invite ID, friend name, and response JSON fields, then saves the paired contact.
 
-This is still a prototype copy/paste flow. A future interface should replace JSON copy/paste with guided screens and file import/export.
+This is still a prototype flow. A future interface should replace JSON copy/paste with guided screens and file import/export for real friend setup.
 
 ## Setup states
 
@@ -116,7 +126,7 @@ The local setup panel may show:
 
 ## Important setup note
 
-The local API can now create the configured encrypted app store. Contact setup can be exercised through prototype Add friend actions, but the UI still needs a guided, polished setup flow before non-developer friend testing.
+The local API can now create the configured encrypted app store. Contact setup can be exercised through Create test friend or prototype Add friend actions, but the UI still needs a guided, polished setup flow before non-developer friend testing.
 
 ## Friend testing readiness
 
