@@ -50,6 +50,33 @@ def test_local_api_service_contact_workflow(tmp_path):
     assert service.contacts()[0]["name"] == "robert"
 
 
+def test_local_api_setup_status_ready(tmp_path):
+    alice, _bob = make_pair()
+    path = tmp_path / "store.llh.vault"
+    store = AppStore.create(str(path), "correct horse battery")
+    store.add_contact("bob", alice)
+
+    service = LocalApiService(store_path=str(path), passphrase="correct horse battery")
+    status = service.setup_status()
+
+    assert status["status"] == "ready"
+    assert status["store_exists"] is True
+    assert status["contact_count"] == 1
+    assert status["ready_for_interface_test"] is True
+
+
+def test_local_api_setup_status_missing_store(tmp_path):
+    path = tmp_path / "missing.llh.vault"
+    service = LocalApiService(store_path=str(path), passphrase="correct horse battery")
+
+    status = service.setup_status()
+
+    assert status["status"] == "missing_store"
+    assert status["store_exists"] is False
+    assert status["contact_count"] == 0
+    assert status["ready_for_interface_test"] is False
+
+
 def test_local_api_service_send_records_history(tmp_path, monkeypatch):
     alice, _bob = make_pair()
     path = tmp_path / "store.llh.vault"
@@ -89,6 +116,7 @@ def test_local_api_routes_exist(tmp_path):
     app = create_app(LocalApiService(store_path=str(path), passphrase="correct horse battery"))
     routes = {route.path for route in app.routes}
     assert "/health" in routes
+    assert "/setup/status" in routes
     assert "/contacts" in routes
     assert "/contacts/{name}/history" in routes
     assert "/contacts/{name}/rename" in routes
