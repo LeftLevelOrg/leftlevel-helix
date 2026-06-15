@@ -44,3 +44,13 @@ def test_website_messaging_brief_is_documented():
     assert "Fast by engineering" in text
     assert "Usable by default" in text
     assert "not production-ready" in text
+
+
+def test_repository_strategy_is_documented():
+    text = (DOCS / "REPOSITORY_STRATEGY.md").read_text(encoding="utf-8")
+    assert "leftlevel-helix" in text
+    assert "leftlevel-app" in text
+    assert "leftlevel-website" in text
+    assert "leftlevel-relay" in text
+    assert "Keep the playground in this repository for now" in text
+    assert "Security-first rule" in text
