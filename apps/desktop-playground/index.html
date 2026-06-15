@@ -55,6 +55,16 @@
           <span id="setupStatus">checking local API and encrypted store…</span>
         </section>
 
+        <section class="status-card pairing-card">
+          <strong>Pairing:</strong>
+          <div class="pairing-actions">
+            <button id="createInviteButton" type="button">Create invite</button>
+            <button id="acceptInviteButton" type="button">Accept invite</button>
+            <button id="finalizePairingButton" type="button">Finalize response</button>
+          </div>
+          <textarea id="pairingOutput" readonly rows="5" placeholder="Pairing JSON will appear here for copy/paste testing."></textarea>
+        </section>
+
         <section class="status-card">
           <strong>Relay view:</strong>
           <span>encrypted envelopes only · no usernames · no plaintext</span>
