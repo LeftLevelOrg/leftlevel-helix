@@ -84,6 +84,10 @@ def test_playground_has_attachment_preview_helper():
     assert "renderPreview" in preview
     assert "attachment-pill" in preview
     assert "No attachments" in preview
+    assert "Verified" in preview
+    assert "Needs review" in preview
+    assert "Blocked" in preview
+    assert "request a resend" in preview
 
 
 def test_playground_send_button_is_not_wired_to_network_yet():
