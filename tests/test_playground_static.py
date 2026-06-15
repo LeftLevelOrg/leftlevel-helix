@@ -36,6 +36,14 @@ def test_playground_renders_trust_states():
     assert "Safety number changed" in script
 
 
+def test_playground_action_buttons_are_addressable():
+    markup = (PLAYGROUND / "index.html").read_text(encoding="utf-8")
+    assert 'id="verifyButton"' in markup
+    assert 'id="renameButton"' in markup
+    assert 'id="receiveButton"' in markup
+    assert 'id="sendButton"' in markup
+
+
 def test_playground_send_button_is_not_wired_to_network_yet():
     script = (PLAYGROUND / "app.js").read_text(encoding="utf-8")
     assert "Send through local API is intentionally not wired yet" in script
