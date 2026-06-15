@@ -300,6 +300,22 @@ document.querySelector("#verifyButton").addEventListener("click", async () => {
   }
 });
 
+document.querySelector("#createTestFriendButton").addEventListener("click", async () => {
+  if (!apiOnline) {
+    writePairingOutput("Start the local API before creating a test friend.");
+    return;
+  }
+  const baseName = inputValue("#friendNameInput", "test-friend");
+  try {
+    const result = await LeftLevelApi.createTestFriend(baseName);
+    writePairingOutput(result);
+    renderBridgeStatus("test friend created · green means verified for local testing");
+    await refreshActiveContact();
+  } catch (error) {
+    writePairingOutput(`create test friend failed · ${error.message}`);
+  }
+});
+
 document.querySelector("#createInviteButton").addEventListener("click", async () => {
   if (!apiOnline) {
     writePairingOutput("Start the local API before creating a friend invite.");
