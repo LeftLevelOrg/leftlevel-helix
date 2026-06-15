@@ -1,0 +1,20 @@
+{
+  "ciphertext_sha256": "nVnQTSC8aunHhtvMGQ40qqgcT3U-sqiYqZs4zUCWOuA",
+  "mailbox_id": "SLko0dqhW0GKh-XAbTfG-S6yL2c",
+  "notes": "Generated with test-only deterministic helpers. Do not use fixture material in production.",
+  "package_version": "0.6.0",
+  "plaintext_001": "hello from fixture",
+  "protocol": "LLH-HELIX-v0.2",
+  "safety_fingerprint": "96BevFmtfeebbbEcgAi7QH783EPYpIlP5xOPdj8b0YM",
+  "safety_short_code": "925-390-993-575",
+  "visible_header": {
+    "mailbox_id": "SLko0dqhW0GKh-XAbTfG-S6yL2c",
+    "mode": "sealed-header-v1",
+    "v": "LLH-HELIX-v0.2"
+  },
+  "visible_header_keys": [
+    "mailbox_id",
+    "mode",
+    "v"
+  ]
+}
