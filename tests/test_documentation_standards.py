@@ -65,6 +65,15 @@ def test_ui_extraction_plan_is_documented():
     assert "The app should call stable Helix interfaces" in text
 
 
+def test_ui_pairing_flow_is_documented():
+    text = (DOCS / "UI_PAIRING_FLOW.md").read_text(encoding="utf-8")
+    assert "Pairing states" in text
+    assert "needs_pairing" in text
+    assert "paired_contacts_available" in text
+    assert "Future pairing milestones" in text
+    assert "Security boundary" in text
+
+
 def test_release_readiness_gates_are_documented():
     text = (DOCS / "RELEASE_READINESS_GATES.md").read_text(encoding="utf-8")
     assert "Current status" in text
