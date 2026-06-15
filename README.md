@@ -34,6 +34,7 @@ v0.5 focuses on:
 - Fixed-block message padding for small messages.
 - Encrypted local vault files for identities, invite drafts, and session state.
 - Encrypted local app store for contacts, trust labels, sessions, and message history.
+- Local contact renaming without changing identity or session continuity.
 - Bounded out-of-order receive handling.
 - HTTP relay client and CLI send/receive commands.
 - Safety-number verification for invite/response handshakes.
@@ -68,9 +69,10 @@ leftlevel-app init
 leftlevel-app add-contact bob --session alice-session.llh.vault
 leftlevel-app contacts
 leftlevel-app verify-contact bob
-leftlevel-app send bob "hello" --relay-url http://127.0.0.1:8787
-leftlevel-app receive bob --relay-url http://127.0.0.1:8787
-leftlevel-app history bob
+leftlevel-app rename-contact bob robert
+leftlevel-app send robert "hello" --relay-url http://127.0.0.1:8787
+leftlevel-app receive robert --relay-url http://127.0.0.1:8787
+leftlevel-app history robert
 ```
 
 This is the recommended product path before adding Discord, Slack, browser, or mobile-share integrations.
@@ -147,3 +149,4 @@ See:
 - `PRODUCTION_READINESS.md`
 - `docs/WORKING_PRODUCT_PLAN.md`
 - `docs/PROTECTION_MATRIX.md`
+- `docs/IDENTITY_MODEL.md`
