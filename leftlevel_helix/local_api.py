@@ -9,10 +9,22 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 from .app_store import AppStore
+from .client import HttpRelayClient
 
 
 class RenameRequest(BaseModel):
     new_name: str
+
+
+class SendRequest(BaseModel):
+    message: str
+    relay_url: str
+    timeout: float = 10.0
+
+
+class ReceiveRequest(BaseModel):
+    relay_url: str
+    timeout: float = 10.0
 
 
 class LocalApiService:
@@ -44,6 +56,27 @@ class LocalApiService:
         store.set_trust_state(name, "verified")
         return {"status": "verified", "name": name}
 
+    def send_message(self, name: str, message: str, *, relay_url: str, timeout: float = 10.0) -> dict[str, str]:
+        store = self._store()
+        session = store.load_session(name)
+        envelope = session.seal(message.encode("utf-8"))
+        HttpRelayClient(relay_url, timeout=timeout).put_envelope(envelope)
+        store.save_session(name, session)
+        store.record_message(name, "sent", message, mailbox_id=envelope.mailbox_id)
+        return {"status": "sent", "name": name, "mailbox_id": envelope.mailbox_id}
+
+    def receive_message(self, name: str, *, relay_url: str, timeout: float = 10.0) -> dict[str, Any]:
+        store = self._store()
+        session = store.load_session(name)
+        mailbox_id = session.next_receive_mailbox()
+        envelope = HttpRelayClient(relay_url, timeout=timeout).fetch_once(mailbox_id)
+        if envelope is None:
+            return {"status": "empty", "name": name, "mailbox_id": mailbox_id, "message": None}
+        message = session.open(envelope).decode("utf-8")
+        store.save_session(name, session)
+        store.record_message(name, "received", message, mailbox_id=envelope.mailbox_id)
+        return {"status": "received", "name": name, "mailbox_id": envelope.mailbox_id, "message": message}
+
 
 def create_app(service: LocalApiService) -> FastAPI:
     app = FastAPI(title="LeftLevel Local API", version="0.1")
@@ -73,6 +106,14 @@ def create_app(service: LocalApiService) -> FastAPI:
     @app.post("/contacts/{name}/verify")
     def verify_contact(name: str):
         return handle(lambda: service.verify_contact(name))
+
+    @app.post("/contacts/{name}/send")
+    def send_message(name: str, request: SendRequest):
+        return handle(lambda: service.send_message(name, request.message, relay_url=request.relay_url, timeout=request.timeout))
+
+    @app.post("/contacts/{name}/receive")
+    def receive_message(name: str, request: ReceiveRequest):
+        return handle(lambda: service.receive_message(name, relay_url=request.relay_url, timeout=request.timeout))
 
     return app
 
