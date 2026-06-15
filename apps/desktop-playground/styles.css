@@ -56,7 +56,7 @@ button, input, textarea { font: inherit; }
 h1, h2, p { margin: 0; }
 
 .brand h1 { font-size: 20px; }
-.brand p, .eyebrow, #safetyCode { color: var(--muted); }
+.brand p, .eyebrow, #safetyCode, .helper-text { color: var(--muted); }
 
 .primary, .actions button, .composer button, .tool-button, .pairing-actions button {
   border: 0;
@@ -95,6 +95,14 @@ h1, h2, p { margin: 0; }
 .contact.active, .contact:hover {
   background: var(--panel-soft);
   border-color: var(--line);
+}
+
+.empty-contact-list {
+  color: var(--muted);
+  border: 1px dashed var(--line);
+  border-radius: 16px;
+  padding: 12px;
+  line-height: 1.45;
 }
 
 .badge {
@@ -176,6 +184,42 @@ h1, h2, p { margin: 0; }
   gap: 12px;
 }
 
+.pairing-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.pairing-form label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.pairing-form input,
+.pairing-form textarea,
+#pairingOutput {
+  width: 100%;
+  resize: vertical;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px;
+  line-height: 1.45;
+}
+
+.pairing-form textarea,
+#pairingOutput {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+}
+
+.pairing-form label:nth-child(n + 3) {
+  grid-column: span 2;
+}
+
 .pairing-actions {
   display: flex;
   flex-wrap: wrap;
@@ -186,17 +230,6 @@ h1, h2, p { margin: 0; }
   background: var(--panel-soft);
   color: var(--text);
   border: 1px solid var(--line);
-}
-
-#pairingOutput {
-  width: 100%;
-  resize: vertical;
-  color: var(--text);
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 12px;
-  line-height: 1.45;
 }
 
 .attachment-status-card {
@@ -263,7 +296,7 @@ h1, h2, p { margin: 0; }
   line-height: 1.45;
 }
 
-.composer textarea:focus, #pairingOutput:focus {
+.composer textarea:focus, .pairing-form input:focus, .pairing-form textarea:focus, #pairingOutput:focus {
   border-color: rgba(143, 211, 255, 0.7);
   box-shadow: 0 0 0 3px rgba(143, 211, 255, 0.12);
 }
@@ -327,6 +360,8 @@ h1, h2, p { margin: 0; }
   .app-shell { grid-template-columns: 1fr; }
   .sidebar { border-right: 0; border-bottom: 1px solid var(--line); }
   .conversation-header { align-items: flex-start; flex-direction: column; gap: 16px; }
+  .pairing-form { grid-template-columns: 1fr; }
+  .pairing-form label:nth-child(n + 3) { grid-column: span 1; }
   .composer { grid-template-columns: 1fr; }
   .composer-tools { order: 2; }
   .composer-main { order: 1; }
