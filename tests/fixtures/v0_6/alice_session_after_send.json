@@ -1,0 +1,18 @@
+{
+  "alice_identity_pub": "lUfWkyj-r17CjSYrOAJnZVilq3xy-uO5jiGFUy_yLDo",
+  "bob_identity_pub": "vycwtvOuXaGh__ddNsSPvY7YX5Z2NgKyswXvYM4FSVA",
+  "conversation_id": "xSDARhuMvx5kljmAf3QE2UYpVC6zTWt-",
+  "max_skip": 64,
+  "recv_chain_key": "KUODPhK7DAx-nJnCZ7pF89OZwTWuwCjodZOXZJBrz3o",
+  "recv_counter": 0,
+  "recv_mailbox_key": "uvVfwnKstHTbbDcdOd1uN8GHCcA74CXbAOjRh_gQhXI",
+  "role": "initiator",
+  "root_key": "88vkj-dshX4GsQCpT3Tfwj-COVTeUYEfccoGO8702wk",
+  "seen_mailboxes": [],
+  "send_chain_key": "1f1zaOkYoxxTaOPvnNycM_SN-JEI-jWwoH0AeRVt1Ng",
+  "send_counter": 1,
+  "send_mailbox_key": "899GZ0I8J-vFA109gR7icsc17ynfz_-3X3hpPQHMTY0",
+  "skipped_message_keys": {},
+  "transcript_hash": "0q6dsHVrpFbF5c_3_-Tnq4uVstnvOC_E4bGCBYovrTM",
+  "v": "LLH-HELIX-v0.2"
+}
