@@ -12,7 +12,7 @@ The goal is not to hide the protocol. The goal is to build the clearest and most
 
 | Differentiator | Why it matters |
 |---|---|
-| No phone number or email identity required | Users can create private connections without joining a central account directory. |
+| No phone number or email identity required | Users can create protected connections without joining a central account directory. |
 | Server-blind relay model | The relay does not need plaintext, contact names, or permanent conversation IDs. |
 | Pairwise identity | A contact relationship can exist without a global public username. |
 | Clear trust labels | NEW, OK, and CHANGED states make verification understandable. |
@@ -25,9 +25,9 @@ The goal is not to hide the protocol. The goal is to build the clearest and most
 
 Users may choose LeftLevel because they want:
 
-- private contact setup without phone numbers;
+- protected contact setup without phone numbers;
 - a communication tool that does not center on a global account;
-- a small app focused on trusted private conversations;
+- a small app focused on trusted communications;
 - clear verification status;
 - official relays or self-hosted relays;
 - transparent security documentation.
@@ -59,7 +59,7 @@ A healthy open-source commercial path can include:
 
 - hosted relay service;
 - paid official builds and support;
-- managed private deployments;
+- managed protected deployments;
 - enterprise setup help;
 - training and documentation packages;
 - future integrations after the standalone app is stable.
