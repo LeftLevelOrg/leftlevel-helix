@@ -58,7 +58,7 @@ h1, h2, p { margin: 0; }
 .brand h1 { font-size: 20px; }
 .brand p, .eyebrow, #safetyCode { color: var(--muted); }
 
-.primary, .actions button, .composer button, .tool-button {
+.primary, .actions button, .composer button, .tool-button, .pairing-actions button {
   border: 0;
   border-radius: 14px;
   color: #07111f;
@@ -113,7 +113,7 @@ h1, h2, p { margin: 0; }
 
 .conversation {
   display: grid;
-  grid-template-rows: auto auto auto 1fr auto;
+  grid-template-rows: auto auto auto auto auto 1fr auto;
   padding: 28px;
   gap: 18px;
 }
@@ -136,6 +136,34 @@ h1, h2, p { margin: 0; }
 
 .status-card { padding: 16px 18px; color: var(--muted); }
 .status-card strong { color: var(--text); }
+
+.pairing-card {
+  display: grid;
+  gap: 12px;
+}
+
+.pairing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pairing-actions button {
+  background: var(--panel-soft);
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+
+#pairingOutput {
+  width: 100%;
+  resize: vertical;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px;
+  line-height: 1.45;
+}
 
 .attachment-status-card {
   display: grid;
@@ -201,7 +229,7 @@ h1, h2, p { margin: 0; }
   line-height: 1.45;
 }
 
-.composer textarea:focus {
+.composer textarea:focus, #pairingOutput:focus {
   border-color: rgba(143, 211, 255, 0.7);
   box-shadow: 0 0 0 3px rgba(143, 211, 255, 0.12);
 }
