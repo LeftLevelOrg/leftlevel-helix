@@ -1,0 +1,9 @@
+{
+  "ciphertext": "1hk3QbPR5ep9SQV81sovgLivVtw1vNN3Qz1MjaUF991uVJeMkJRx6bFkeYBgf5QcKmSMXWRR2UGtzJci3P17b3iJmddfBtzFbCOw2LUQKFFJdpdaGVcOL9vkzFIbKGl0XRwniD9KJ-a0HoqN34uuZ5lvuoIW7cegaLG-ba0qyRsEWrFjZHEvzNMUfT2Y_tU-n8gMfKfo9pRWOidLiWc1WDPOAL-VUQSr6D6CAjKnhhXWhY5u2uV4LhLqbuuTEKNoHfyqa-K9oPIizyW0nJHmprEmelXJCUk2NTkB1nB-eT1zA4d05_mGQpQjQpGLWL3U4xNZEOzQWgFAOQRbalUwbmYRSCUyhL5X-zoDp8cERQU",
+  "header": {
+    "mailbox_id": "SLko0dqhW0GKh-XAbTfG-S6yL2c",
+    "mode": "sealed-header-v1",
+    "v": "LLH-HELIX-v0.2"
+  },
+  "mailbox_id": "SLko0dqhW0GKh-XAbTfG-S6yL2c"
+}
