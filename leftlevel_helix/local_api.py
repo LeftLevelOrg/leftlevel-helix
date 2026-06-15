@@ -11,6 +11,7 @@ from pydantic import BaseModel
 
 from .app_store import AppStore
 from .client import HttpRelayClient
+from .pairing_status import pairing_status_for_contact_count
 
 
 class RenameRequest(BaseModel):
@@ -44,21 +45,25 @@ class LocalApiService:
     def setup_status(self) -> dict[str, Any]:
         path_exists = os.path.exists(self.store_path)
         if not path_exists:
+            pairing = pairing_status_for_contact_count(0)
             return {
                 "status": "missing_store",
                 "store_path": self.store_path,
                 "store_exists": False,
                 "contact_count": 0,
                 "ready_for_interface_test": False,
+                "pairing": pairing.to_dict(),
             }
         store = self._store()
         contact_count = len(store.contact_views())
+        pairing = pairing_status_for_contact_count(contact_count)
         return {
             "status": "ready" if contact_count > 0 else "empty_store",
             "store_path": self.store_path,
             "store_exists": True,
             "contact_count": contact_count,
             "ready_for_interface_test": contact_count > 0,
+            "pairing": pairing.to_dict(),
         }
 
     def contacts(self) -> list[dict[str, Any]]:
