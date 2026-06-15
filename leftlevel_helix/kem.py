@@ -11,6 +11,34 @@ class KemUnavailable(RuntimeError):
     pass
 
 
+def _openssl_mlkem768_algorithm_name() -> str:
+    """Return the OpenSSL provider's advertised ML-KEM-768 algorithm name.
+
+    OpenSSL/provider builds may expose this algorithm as either ML-KEM-768 or
+    MLKEM768. Use the advertised spelling for genpkey instead of assuming one
+    alias works everywhere.
+    """
+
+    if shutil.which("openssl") is None:
+        raise KemUnavailable("OpenSSL executable not found")
+    try:
+        result = subprocess.run(
+            ["openssl", "list", "-kem-algorithms"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except Exception as exc:  # pragma: no cover - platform dependent
+        raise KemUnavailable(f"Could not query OpenSSL KEM support: {exc}") from exc
+
+    supported = result.stdout
+    if "ML-KEM-768" in supported:
+        return "ML-KEM-768"
+    if "MLKEM768" in supported:
+        return "MLKEM768"
+    raise KemUnavailable("OpenSSL does not advertise ML-KEM-768 support")
+
+
 @dataclass
 class MlKem768PrivateKey:
     """PEM-encoded ML-KEM-768 private key handled by OpenSSL 3.5+.
@@ -23,27 +51,15 @@ class MlKem768PrivateKey:
 
     @staticmethod
     def require_openssl_mlkem() -> None:
-        if shutil.which("openssl") is None:
-            raise KemUnavailable("OpenSSL executable not found")
-        try:
-            result = subprocess.run(
-                ["openssl", "list", "-kem-algorithms"],
-                check=True,
-                capture_output=True,
-                text=True,
-            )
-        except Exception as exc:  # pragma: no cover - platform dependent
-            raise KemUnavailable(f"Could not query OpenSSL KEM support: {exc}") from exc
-        if "ML-KEM-768" not in result.stdout and "MLKEM768" not in result.stdout:
-            raise KemUnavailable("OpenSSL does not advertise ML-KEM-768 support")
+        _openssl_mlkem768_algorithm_name()
 
     @classmethod
     def generate(cls) -> "MlKem768PrivateKey":
-        cls.require_openssl_mlkem()
+        algorithm_name = _openssl_mlkem768_algorithm_name()
         with tempfile.TemporaryDirectory() as d:
             priv = Path(d) / "mlkem768-private.pem"
             subprocess.run(
-                ["openssl", "genpkey", "-algorithm", "ML-KEM-768", "-out", str(priv)],
+                ["openssl", "genpkey", "-algorithm", algorithm_name, "-out", str(priv)],
                 check=True,
                 capture_output=True,
             )
