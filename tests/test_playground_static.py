@@ -115,25 +115,27 @@ def test_playground_has_security_indicator_legend():
     assert ".legend-item.danger" in styles
 
 
-def test_playground_has_pairing_action_panel():
+def test_playground_has_guided_add_friend_panel():
     markup = (PLAYGROUND / "index.html").read_text(encoding="utf-8")
     styles = (PLAYGROUND / "styles.css").read_text(encoding="utf-8")
     script = (PLAYGROUND / "app.js").read_text(encoding="utf-8")
     assert "Add friend" in markup
-    assert "Create friend invite" in markup
-    assert "Accept friend invite" in markup
-    assert "Finish adding friend" in markup
-    assert 'id="createInviteButton"' in markup
-    assert 'id="acceptInviteButton"' in markup
-    assert 'id="finalizePairingButton"' in markup
+    assert "Friend name" in markup
+    assert "Invite ID" in markup
+    assert "Friend invite JSON" in markup
+    assert "Friend response JSON" in markup
+    assert 'id="friendNameInput"' in markup
+    assert 'id="draftIdInput"' in markup
+    assert 'id="inviteInput"' in markup
+    assert 'id="responseInput"' in markup
     assert 'id="pairingOutput"' in markup
-    assert ".pairing-card" in styles
-    assert ".pairing-actions" in styles
-    assert "writePairingOutput" in script
-    assert "readPairingJson" in script
-    assert "create friend invite failed" in script
-    assert "accept friend invite failed" in script
-    assert "finish Add friend failed" in script
+    assert ".pairing-form" in styles
+    assert "inputValue" in script
+    assert "parseJsonField" in script
+    assert "setPairingField" in script
+    assert "readPairingJson" not in script
+    assert "prompt(\"Friend name" not in script
+    assert "prompt(\"Invite ID" not in script
     assert "LeftLevelApi.createPairingInvite" in script
     assert "LeftLevelApi.acceptPairingInvite" in script
     assert "LeftLevelApi.finalizePairingResponse" in script
