@@ -3,8 +3,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
+from uuid import uuid4
 
-from .session import HelixSession
+from .identity import Identity
+from .session import AliceDraft, HelixInvite, HelixResponse, HelixSession, accept_invite, create_invite, finalize_invite
 from .vault import load_vault, save_vault
 
 APP_STORE_VERSION = "LLH-APP-STORE-v0.1"
@@ -15,12 +17,16 @@ def utc_now() -> str:
 
 
 def new_store_state() -> dict[str, Any]:
-    return {"v": APP_STORE_VERSION, "contacts": {}, "messages": []}
+    return {"v": APP_STORE_VERSION, "contacts": {}, "messages": [], "pairing_drafts": {}}
 
 
 def _validate_contact_name(name: str) -> None:
     if not name or any(ch.isspace() for ch in name):
         raise ValueError("contact name must be non-empty and contain no spaces")
+
+
+def _ensure_pairing_drafts(state: dict[str, Any]) -> dict[str, Any]:
+    return state.setdefault("pairing_drafts", {})
 
 
 @dataclass
@@ -37,9 +43,9 @@ class AppStore:
     """Encrypted local product store for contacts, sessions, and message history.
 
     The store is intentionally simple for the prototype: one encrypted vault file
-    contains contacts, serialized session state, and a local message log. This is
-    not a production database yet, but it makes the CLI behave like a small app
-    rather than a loose collection of files.
+    contains contacts, serialized session state, pairing drafts, and a local
+    message log. This is not a production database yet, but it makes the CLI and
+    local API behave like a small app rather than a loose collection of files.
     """
 
     def __init__(self, path: str, passphrase: str, state: dict[str, Any] | None = None):
@@ -48,6 +54,7 @@ class AppStore:
         self.state = state if state is not None else new_store_state()
         if self.state.get("v") != APP_STORE_VERSION:
             raise ValueError("unsupported app store version")
+        _ensure_pairing_drafts(self.state)
 
     @classmethod
     def create(cls, path: str, passphrase: str) -> "AppStore":
@@ -78,6 +85,41 @@ class AppStore:
             "updated_at": utc_now(),
         }
         self.save()
+
+    def create_pairing_invite(self, *, label: str = "new-contact") -> dict[str, Any]:
+        draft_id = uuid4().hex
+        draft = create_invite(Identity.generate())
+        drafts = _ensure_pairing_drafts(self.state)
+        drafts[draft_id] = {
+            "label": label,
+            "draft": draft.to_state_dict(),
+            "created_at": utc_now(),
+        }
+        self.save()
+        return {"draft_id": draft_id, "label": label, "invite": draft.invite.to_dict()}
+
+    def accept_pairing_invite(self, contact_name: str, invite: dict[str, Any]) -> dict[str, Any]:
+        _validate_contact_name(contact_name)
+        response, session = accept_invite(Identity.generate(), HelixInvite.from_dict(invite))
+        self.add_contact(contact_name, session, verified=False)
+        return {"contact_name": contact_name, "response": response.to_dict(), "safety_short_code": session.safety_number().short_code}
+
+    def finalize_pairing_response(self, draft_id: str, contact_name: str, response: dict[str, Any]) -> dict[str, Any]:
+        _validate_contact_name(contact_name)
+        drafts = _ensure_pairing_drafts(self.state)
+        try:
+            record = drafts[draft_id]
+        except KeyError as exc:
+            raise ValueError(f"unknown pairing draft: {draft_id}") from exc
+        draft = AliceDraft.from_state_dict(record["draft"])
+        session = finalize_invite(draft, HelixResponse.from_dict(response))
+        self.add_contact(contact_name, session, verified=False)
+        del drafts[draft_id]
+        self.save()
+        return {"contact_name": contact_name, "safety_short_code": session.safety_number().short_code}
+
+    def pairing_draft_count(self) -> int:
+        return len(_ensure_pairing_drafts(self.state))
 
     def rename_contact(self, old_name: str, new_name: str) -> None:
         """Rename a local contact without changing cryptographic identity.
