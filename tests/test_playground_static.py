@@ -62,6 +62,7 @@ def test_playground_helper_exposes_contact_actions():
     assert "setupStatus:" in helper
     assert "createStore:" in helper
     assert "createTestFriend:" in helper
+    assert "sendTestMessage:" in helper
     assert "createPairingInvite:" in helper
     assert "acceptPairingInvite:" in helper
     assert "finalizePairingResponse:" in helper
@@ -74,6 +75,7 @@ def test_playground_helper_exposes_contact_actions():
     assert "/setup/status" in helper
     assert "/setup/create" in helper
     assert "/setup/test-friend" in helper
+    assert "/setup/test-message" in helper
     assert "/pairing/invite" in helper
     assert "/pairing/accept" in helper
     assert "/pairing/finalize" in helper
@@ -123,11 +125,13 @@ def test_playground_has_guided_add_friend_panel():
     script = (PLAYGROUND / "app.js").read_text(encoding="utf-8")
     assert "Add friend" in markup
     assert "Create test friend" in markup
+    assert "Send test message" in markup
     assert "Friend name" in markup
     assert "Invite ID" in markup
     assert "Friend invite JSON" in markup
     assert "Friend response JSON" in markup
     assert 'id="createTestFriendButton"' in markup
+    assert 'id="sendTestMessageButton"' in markup
     assert 'id="friendNameInput"' in markup
     assert 'id="draftIdInput"' in markup
     assert 'id="inviteInput"' in markup
@@ -138,7 +142,9 @@ def test_playground_has_guided_add_friend_panel():
     assert "parseJsonField" in script
     assert "setPairingField" in script
     assert "LeftLevelApi.createTestFriend" in script
+    assert "LeftLevelApi.sendTestMessage" in script
     assert "test friend created" in script
+    assert "test message delivered locally" in script
     assert "readPairingJson" not in script
     assert "prompt(\"Friend name" not in script
     assert "prompt(\"Invite ID" not in script
