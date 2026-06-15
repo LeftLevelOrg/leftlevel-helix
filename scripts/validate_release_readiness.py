@@ -4,10 +4,14 @@ from pathlib import Path
 
 REQUIRED_DOCS = {
     "README.md": ["Security status"],
+    "CHANGELOG.md": ["Unreleased", "Known limitations"],
     "SECURITY_MODEL.md": ["Security"],
     "PRODUCTION_READINESS.md": ["Production"],
     "docs/PROJECT_VALUES.md": ["Security and privacy protection"],
     "docs/RELEASE_READINESS_GATES.md": ["Current status", "Sign-off record template", "Blocking conditions"],
+    "docs/SIGNOFF_RECORD_TEMPLATE.md": ["Release candidate", "Gate status", "Evidence links", "Decision"],
+    "docs/VERSIONING_POLICY.md": ["Package version", "Wire protocol name", "Changelog rule"],
+    "docs/DEPENDENCY_INVENTORY.md": ["Runtime dependencies", "Production readiness requirements"],
     "docs/REPOSITORY_STRATEGY.md": ["Recommended repository boundaries"],
     "docs/UI_EXTRACTION_PLAN.md": ["Extraction prerequisites"],
     "docs/LOCAL_INTERFACE_TESTING.md": ["Current status"],
