@@ -17,6 +17,7 @@ REQUIRED_DOCS = {
     "docs/CI_POLICY.md": ["Portable test suite", "Readiness documentation validation", "Production readiness boundary"],
     "docs/REPOSITORY_STRATEGY.md": ["Recommended repository boundaries"],
     "docs/UI_EXTRACTION_PLAN.md": ["Extraction prerequisites"],
+    "docs/UI_PAIRING_FLOW.md": ["Pairing states", "Future pairing milestones", "Security boundary"],
     "docs/LOCAL_INTERFACE_TESTING.md": ["Current status"],
 }
 
