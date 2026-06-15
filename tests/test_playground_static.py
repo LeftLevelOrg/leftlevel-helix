@@ -59,6 +59,9 @@ def test_playground_action_buttons_are_addressable():
 def test_playground_helper_exposes_contact_actions():
     helper = (PLAYGROUND / "api.js").read_text(encoding="utf-8")
     assert "setupStatus:" in helper
+    assert "createPairingInvite:" in helper
+    assert "acceptPairingInvite:" in helper
+    assert "finalizePairingResponse:" in helper
     assert "contacts:" in helper
     assert "history:" in helper
     assert "verify:" in helper
@@ -66,6 +69,9 @@ def test_playground_helper_exposes_contact_actions():
     assert "send:" in helper
     assert "receive:" in helper
     assert "/setup/status" in helper
+    assert "/pairing/invite" in helper
+    assert "/pairing/accept" in helper
+    assert "/pairing/finalize" in helper
     assert "/send" in helper
     assert "/receive" in helper
 
@@ -82,6 +88,24 @@ def test_playground_has_local_setup_panel():
     assert "local API not connected" in script
     assert "pairing.label" in script
     assert "pairing.next_action" in script
+
+
+def test_playground_has_pairing_action_panel():
+    markup = (PLAYGROUND / "index.html").read_text(encoding="utf-8")
+    styles = (PLAYGROUND / "styles.css").read_text(encoding="utf-8")
+    script = (PLAYGROUND / "app.js").read_text(encoding="utf-8")
+    assert "Pairing:" in markup
+    assert 'id="createInviteButton"' in markup
+    assert 'id="acceptInviteButton"' in markup
+    assert 'id="finalizePairingButton"' in markup
+    assert 'id="pairingOutput"' in markup
+    assert ".pairing-card" in styles
+    assert ".pairing-actions" in styles
+    assert "writePairingOutput" in script
+    assert "readPairingJson" in script
+    assert "LeftLevelApi.createPairingInvite" in script
+    assert "LeftLevelApi.acceptPairingInvite" in script
+    assert "LeftLevelApi.finalizePairingResponse" in script
 
 
 def test_playground_has_v07_composer_shell():
