@@ -1,23 +1,24 @@
-# LeftLevel Helix v0.5 Prototype
+# LeftLevel Helix v0.6 Prototype
 
 **LeftLevel Helix** is an experimental, original secure-messaging protocol prototype for the LeftLevel project: _Decentralized Privacy — Built to Stay Online_.
 
 This repository demonstrates a two-person, invite-only, server-blind encrypted conversation flow. It uses open standards and vetted primitives rather than copying an app protocol or inventing new mathematics.
 
-> Package version: v0.5.0. Current wire protocol name: `LLH-HELIX-v0.2`.
+> Package version: v0.6.0. Current wire protocol name: `LLH-HELIX-v0.2`.
 
 ## Current product focus
 
 The near-term goal is simple: get a working product experience before adding Discord, Slack, browser, or mobile-share integrations.
 
-v0.5 focuses on:
+v0.6 focuses on:
 
 - pairing two people;
 - verifying the contact;
 - sending encrypted messages through a blind relay;
 - receiving encrypted messages;
 - keeping encrypted local contact and message history;
-- showing clear trust labels.
+- showing clear trust labels;
+- reducing relay-visible message metadata.
 
 ## What this prototype does
 
@@ -31,6 +32,7 @@ v0.5 focuses on:
 - ChaCha20-Poly1305 authenticated encryption.
 - Rotating mailbox IDs so the relay does not need conversation IDs or user IDs.
 - Blind relay that stores only encrypted envelopes by mailbox ID.
+- Sealed message metadata: direction and padding details are inside the encrypted payload, not the visible relay header.
 - Fixed-block message padding for small messages.
 - Encrypted local vault files for identities, invite drafts, and session state.
 - Encrypted local app store for contacts, trust labels, sessions, and message history.
@@ -38,14 +40,14 @@ v0.5 focuses on:
 - Bounded out-of-order receive handling.
 - HTTP relay client and CLI send/receive commands.
 - Safety-number verification for invite/response handshakes.
-- Tests for handshake, encryption, replay rejection, tamper rejection, out-of-order receive handling, encrypted vault persistence, relay blindness, HTTP relay client behavior, safety-number behavior, and local app-store messaging flow.
+- Tests for handshake, encryption, replay rejection, tamper rejection, out-of-order receive handling, encrypted vault persistence, relay blindness, HTTP relay client behavior, safety-number behavior, sealed headers, and local app-store messaging flow.
 
 ## What this prototype does not yet do
 
 - It is **not production-ready**.
 - It has **not been independently audited**.
-- v0.5 supports two users only.
-- v0.5 does not yet include mobile apps, group MLS-style trees, mixnet routing, hardened OS keychain/keystore integration, or a production database.
+- v0.6 supports two users only.
+- v0.6 does not yet include mobile apps, group MLS-style trees, mixnet routing, hardened OS keychain/keystore integration, or a production database.
 - It cannot protect messages displayed on a fully compromised endpoint.
 
 ## Man-in-the-middle posture
@@ -150,3 +152,5 @@ See:
 - `docs/WORKING_PRODUCT_PLAN.md`
 - `docs/PROTECTION_MATRIX.md`
 - `docs/IDENTITY_MODEL.md`
+- `docs/HELIX_RATCHET_AND_ANONYMITY_MODEL.md`
+- `docs/HELIX_EPOCH_STATE_MODEL.md`
