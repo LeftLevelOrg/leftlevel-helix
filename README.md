@@ -1,8 +1,10 @@
-# LeftLevel Helix v0.2 Prototype
+# LeftLevel Helix v0.3 Prototype
 
 **LeftLevel Helix** is an experimental, original secure-messaging protocol prototype for the LeftLevel project: _Decentralized Privacy — Built to Stay Online_.
 
 This repository demonstrates a two-person, invite-only, server-blind encrypted conversation flow. It uses open standards and vetted primitives rather than copying an app protocol or inventing new mathematics.
+
+> Package version: v0.3.0. Current wire protocol name: `LLH-HELIX-v0.2`.
 
 ## What this prototype does
 
@@ -17,14 +19,17 @@ This repository demonstrates a two-person, invite-only, server-blind encrypted c
 - Rotating mailbox IDs so the relay does not need conversation IDs or user IDs.
 - Blind relay that stores only encrypted envelopes by mailbox ID.
 - Fixed-block message padding for small messages.
-- Tests for handshake, encryption, replay rejection, tamper rejection, out-of-order receive handling, encrypted vault persistence, and relay blindness.
+- Encrypted local vault files for identities, invite drafts, and session state.
+- Bounded out-of-order receive handling.
+- HTTP relay client and CLI send/receive commands.
+- Tests for handshake, encryption, replay rejection, tamper rejection, out-of-order receive handling, encrypted vault persistence, relay blindness, and HTTP relay client behavior.
 
 ## What this prototype does not yet do
 
 - It is **not production-ready**.
 - It has **not been independently audited**.
-- v0.2 supports two users only.
-- v0.2 does not yet include mobile apps, group MLS-style trees, mixnet routing, hardened OS keychain/keystore integration, or a production local message database.
+- v0.3 supports two users only.
+- v0.3 does not yet include mobile apps, group MLS-style trees, mixnet routing, hardened OS keychain/keystore integration, or a production local message database.
 - It cannot protect messages displayed on a fully compromised endpoint.
 
 ## Why this is not “stealing Signal”
@@ -42,17 +47,17 @@ The innovation target is the **LeftLevel architecture**: invite-only pseudonymou
 ## Requirements
 
 - Python 3.11+
-- OpenSSL 3.5+ with ML-KEM-768 support
+- OpenSSL 3.5+ with ML-KEM-768 support for real post-quantum handshakes
 - Python packages listed in `pyproject.toml`
 
 Check OpenSSL support:
 
 ```bash
 openssl version
-openssl list -kem-algorithms | grep -i ML-KEM-768
+openssl list -kem-algorithms | grep -i 'ML-KEM-768\|MLKEM768'
 ```
 
-## Run the demo
+## Run the local demo
 
 ```bash
 python examples/demo_two_users.py
@@ -72,11 +77,7 @@ Relay audit snapshot after fetches: {}
 pytest -q
 ```
 
-## Run the CLI prototype
-
-```bash
-leftlevel-helix --help
-```
+GitHub Actions runs the portable protocol suite as the required CI path and treats the real OpenSSL ML-KEM integration check as environment-dependent.
 
 ## Run the prototype relay
 
@@ -90,6 +91,25 @@ Endpoints:
 - `GET /v0/envelopes/{mailbox_id}`
 - `GET /health`
 - `GET /v0/audit` only when audit mode is enabled
+
+## CLI relay workflow
+
+The relay workflow still requires users to exchange the invite and response files through a safe channel. Once sessions exist, messages can move through the blind relay.
+
+```bash
+export LLH_VAULT_PASSPHRASE='use a long local test passphrase'
+
+leftlevel-relay --relay-url http://127.0.0.1:8787 health
+leftlevel-relay --relay-url http://127.0.0.1:8787 send \
+  --session alice-session.llh.vault \
+  --passphrase "$LLH_VAULT_PASSPHRASE" \
+  --message 'hello over the relay'
+leftlevel-relay --relay-url http://127.0.0.1:8787 receive \
+  --session bob-session.llh.vault \
+  --passphrase "$LLH_VAULT_PASSPHRASE"
+```
+
+The relay receives only the encrypted envelope, mailbox ID, and authenticated header. It does not receive plaintext, usernames, accounts, phone numbers, or email addresses.
 
 ## Security status
 
