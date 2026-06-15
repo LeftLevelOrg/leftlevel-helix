@@ -4,7 +4,7 @@ This roadmap turns the current desktop playground into a useful, modern app expe
 
 ## Product goal
 
-Build a local-first messenger UI that can eventually use the LeftLevel Helix reference core for private conversations, local trust labels, long messages, images, and files.
+Build a local-first messenger UI that can eventually use the LeftLevel Helix reference core for protected messaging workflows, local trust labels, long messages, images, and files.
 
 ## What is possible
 
