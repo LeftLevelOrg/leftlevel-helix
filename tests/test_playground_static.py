@@ -11,6 +11,7 @@ def test_playground_files_exist():
     assert (PLAYGROUND / "app.js").exists()
     assert (PLAYGROUND / "api.js").exists()
     assert (PLAYGROUND / "composer.js").exists()
+    assert (PLAYGROUND / "attachment-preview.js").exists()
 
 
 def test_playground_uses_local_api_with_demo_fallback():
@@ -75,6 +76,14 @@ def test_playground_has_v07_composer_shell():
     assert ".attachment-pill" in styles
     assert "Unicode ready" in composer
     assert "attachment-pill" in composer
+
+
+def test_playground_has_attachment_preview_helper():
+    preview = (PLAYGROUND / "attachment-preview.js").read_text(encoding="utf-8")
+    assert "LeftLevelAttachmentPreview" in preview
+    assert "renderPreview" in preview
+    assert "attachment-pill" in preview
+    assert "No attachments" in preview
 
 
 def test_playground_send_button_is_not_wired_to_network_yet():
