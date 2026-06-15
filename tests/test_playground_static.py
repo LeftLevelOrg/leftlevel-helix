@@ -50,6 +50,7 @@ def test_playground_renders_trust_states():
 
 def test_playground_action_buttons_are_addressable():
     markup = (PLAYGROUND / "index.html").read_text(encoding="utf-8")
+    assert 'id="openStoreButton"' in markup
     assert 'id="verifyButton"' in markup
     assert 'id="renameButton"' in markup
     assert 'id="receiveButton"' in markup
@@ -59,6 +60,7 @@ def test_playground_action_buttons_are_addressable():
 def test_playground_helper_exposes_contact_actions():
     helper = (PLAYGROUND / "api.js").read_text(encoding="utf-8")
     assert "setupStatus:" in helper
+    assert "createStore:" in helper
     assert "createPairingInvite:" in helper
     assert "acceptPairingInvite:" in helper
     assert "finalizePairingResponse:" in helper
@@ -69,6 +71,7 @@ def test_playground_helper_exposes_contact_actions():
     assert "send:" in helper
     assert "receive:" in helper
     assert "/setup/status" in helper
+    assert "/setup/create" in helper
     assert "/pairing/invite" in helper
     assert "/pairing/accept" in helper
     assert "/pairing/finalize" in helper
@@ -88,6 +91,16 @@ def test_playground_has_local_setup_panel():
     assert "local API not connected" in script
     assert "pairing.label" in script
     assert "pairing.next_action" in script
+
+
+def test_playground_open_store_button_creates_store():
+    script = (PLAYGROUND / "app.js").read_text(encoding="utf-8")
+    assert "#openStoreButton" in script
+    assert "LeftLevelApi.createStore" in script
+    assert "encrypted store created" in script
+    assert "encrypted store already exists" in script
+    assert "start the local API before opening the encrypted store" in script
+    assert "No friends yet" in script
 
 
 def test_playground_has_security_indicator_legend():
