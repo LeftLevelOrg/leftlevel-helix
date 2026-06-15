@@ -20,6 +20,10 @@ const LeftLevelApi = (() => {
     health: () => request("/health"),
     setupStatus: () => request("/setup/status"),
     createStore: () => request("/setup/create", { method: "POST" }),
+    createTestFriend: (baseName) => request("/setup/test-friend", {
+      method: "POST",
+      body: JSON.stringify({ base_name: baseName })
+    }),
     createPairingInvite: (label) => request("/pairing/invite", {
       method: "POST",
       body: JSON.stringify({ label })
