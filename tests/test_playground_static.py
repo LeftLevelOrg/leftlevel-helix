@@ -76,9 +76,12 @@ def test_playground_has_local_setup_panel():
     assert "Local setup" in markup
     assert 'id="setupStatus"' in markup
     assert "loadSetupStatus" in script
+    assert "setupStatusText" in script
     assert "ready_for_interface_test" in script
     assert "encrypted store connected" in script
     assert "local API not connected" in script
+    assert "pairing.label" in script
+    assert "pairing.next_action" in script
 
 
 def test_playground_has_v07_composer_shell():
