@@ -81,6 +81,30 @@ def test_local_api_setup_status_missing_store(tmp_path):
     assert status["pairing"]["blocks_friend_testing"] is True
 
 
+def test_local_api_create_store_from_missing_path(tmp_path):
+    path = tmp_path / "new" / "store.llh.vault"
+    service = LocalApiService(store_path=str(path), passphrase="correct horse battery")
+
+    result = service.create_store()
+
+    assert result["status"] == "created"
+    assert path.exists()
+    assert result["setup"]["status"] == "empty_store"
+    assert result["setup"]["store_exists"] is True
+    assert result["setup"]["contact_count"] == 0
+
+
+def test_local_api_create_store_is_idempotent(tmp_path):
+    path = tmp_path / "store.llh.vault"
+    AppStore.create(str(path), "correct horse battery")
+    service = LocalApiService(store_path=str(path), passphrase="correct horse battery")
+
+    result = service.create_store()
+
+    assert result["status"] == "already_exists"
+    assert result["setup"]["store_exists"] is True
+
+
 def test_local_api_pairing_actions_create_contacts(tmp_path):
     alice_path = tmp_path / "alice.llh.vault"
     bob_path = tmp_path / "bob.llh.vault"
@@ -143,6 +167,7 @@ def test_local_api_routes_exist(tmp_path):
     routes = {route.path for route in app.routes}
     assert "/health" in routes
     assert "/setup/status" in routes
+    assert "/setup/create" in routes
     assert "/pairing/invite" in routes
     assert "/pairing/accept" in routes
     assert "/pairing/finalize" in routes
