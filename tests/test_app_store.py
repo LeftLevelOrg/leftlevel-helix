@@ -70,6 +70,34 @@ def test_app_store_contacts_and_history(tmp_path):
     assert restored.history("bob")[0]["body"] == "hello"
 
 
+def test_pairing_actions_create_contacts_on_both_sides(tmp_path):
+    alice_store = AppStore.create(str(tmp_path / "alice.llh.vault"), "correct horse battery")
+    bob_store = AppStore.create(str(tmp_path / "bob.llh.vault"), "correct horse battery")
+
+    invite_result = alice_store.create_pairing_invite(label="bob")
+    assert invite_result["draft_id"]
+    assert invite_result["invite"]["body"]["identity_model"] == "invite-only-pseudonymous"
+    assert alice_store.pairing_draft_count() == 1
+
+    response_result = bob_store.accept_pairing_invite("alice", invite_result["invite"])
+    assert response_result["response"]["body"]["conversation_id"] == invite_result["invite"]["body"]["conversation_id"]
+    assert bob_store.contact_views()[0].name == "alice"
+    assert bob_store.contact_views()[0].trust_state == "unverified"
+
+    finalize_result = alice_store.finalize_pairing_response(invite_result["draft_id"], "bob", response_result["response"])
+    assert finalize_result["contact_name"] == "bob"
+    assert alice_store.pairing_draft_count() == 0
+    assert alice_store.contact_views()[0].name == "bob"
+    assert alice_store.contact_views()[0].trust_state == "unverified"
+    assert alice_store.contact_views()[0].safety_short_code == bob_store.contact_views()[0].safety_short_code
+
+
+def test_pairing_finalize_rejects_unknown_draft(tmp_path):
+    store = AppStore.create(str(tmp_path / "store.llh.vault"), "correct horse battery")
+    with pytest.raises(ValueError, match="unknown pairing draft"):
+        store.finalize_pairing_response("missing", "bob", {"body": {}, "signature": ""})
+
+
 def test_rename_contact_preserves_session_trust_and_history(tmp_path):
     alice, _bob = make_pair()
     path = tmp_path / "store.llh.vault"
