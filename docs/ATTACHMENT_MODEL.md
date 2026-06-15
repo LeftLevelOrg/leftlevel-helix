@@ -4,7 +4,7 @@ This document describes the first attachment foundation for LeftLevel Helix.
 
 ## Status
 
-The current implementation is a prototype attachment package model. It supports local encryption and decryption of attachment bytes for tests and future integration work.
+The current implementation is a prototype attachment package model. It supports local encryption, decryption, references, and encrypted local storage for tests and future integration work.
 
 It is not yet wired into relay-backed send and receive flows.
 
@@ -65,6 +65,22 @@ A reference includes:
 
 The `AttachmentMessagePayload` type wraps optional message text with an attachment reference. This payload is intended to be encrypted by the message layer before relay use.
 
+## Local attachment storage
+
+The `AttachmentStore` type stores encrypted attachment packages in a local encrypted vault.
+
+It supports:
+
+- creating and loading an attachment vault;
+- adding file bytes as encrypted attachments;
+- adding already encrypted attachment packages;
+- retrieving attachment references;
+- decrypting local attachment packages;
+- listing stored attachment summaries;
+- removing stored attachments.
+
+The attachment store is local-only. Relay upload, download, retry, and progress tracking are future work.
+
 ## Security boundary
 
 The manifest and reference currently contain fields such as file name and media type. Those fields must be carried inside an encrypted message payload before use with a relay.
@@ -81,10 +97,10 @@ Long text bodies should remain message content when practical. Very large text, 
 
 The next implementation steps are:
 
-1. Add local encrypted attachment storage.
-2. Add relay transfer tests using opaque attachment references.
-3. Add UI preview states for queued and received attachments.
-4. Wire the desktop playground to send and receive attachment references after tests exist.
+1. Add relay transfer tests using opaque attachment references.
+2. Add UI preview states for queued and received attachments.
+3. Wire the desktop playground to send and receive attachment references after tests exist.
+4. Add upload, download, retry, and progress states.
 
 ## Limitations
 
