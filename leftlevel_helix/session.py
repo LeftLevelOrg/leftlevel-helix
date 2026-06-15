@@ -168,6 +168,9 @@ class HelixSession:
     recv_chain_key: bytes
     send_mailbox_key: bytes
     recv_mailbox_key: bytes
+    alice_identity_pub: bytes
+    bob_identity_pub: bytes
+    transcript_hash: bytes
     send_counter: int = 0
     recv_counter: int = 0
     seen_mailboxes: set[str] = field(default_factory=set)
@@ -181,6 +184,21 @@ class HelixSession:
     def next_receive_mailbox(self) -> str:
         return self._mailbox_id(self.recv_mailbox_key, self.recv_counter + 1)
 
+    def safety_number(self):
+        from .verification import session_safety_number
+
+        return session_safety_number(
+            protocol_name=PROTOCOL_NAME,
+            conversation_id=self.conversation_id,
+            alice_identity_pub=self.alice_identity_pub,
+            bob_identity_pub=self.bob_identity_pub,
+            transcript_hash=self.transcript_hash,
+        )
+
+    def peer_identity_fingerprint(self) -> str:
+        peer_key = self.bob_identity_pub if self.role == "initiator" else self.alice_identity_pub
+        return b64e(sha256(b"LLH-PEER-IDENTITY-v1|" + peer_key))
+
     def seal(self, plaintext: bytes, *, padding_block: int = 256) -> Envelope:
         counter = self.send_counter + 1
         mailbox_id = self._mailbox_id(self.send_mailbox_key, counter)
@@ -189,7 +207,6 @@ class HelixSession:
             "v": PROTOCOL_NAME,
             "mailbox_id": mailbox_id,
             "padding_block": padding_block,
-            # Direction is authenticated but not personally identifying by itself.
             "direction": "i2r" if self.role == "initiator" else "r2i",
         }
         aad = canonical_json(header)
@@ -249,8 +266,6 @@ class HelixSession:
         return _unpad(padded)
 
     def _trim_replay_state(self) -> None:
-        # Keep replay state bounded for prototype clients. Production clients should
-        # persist a compact consumed-mailbox filter with stronger DoS controls.
         if len(self.seen_mailboxes) > 4096:
             self.seen_mailboxes = set(list(self.seen_mailboxes)[-2048:])
         if len(self.skipped_message_keys) > self.max_skip:
@@ -267,6 +282,9 @@ class HelixSession:
             "recv_chain_key": b64e(self.recv_chain_key),
             "send_mailbox_key": b64e(self.send_mailbox_key),
             "recv_mailbox_key": b64e(self.recv_mailbox_key),
+            "alice_identity_pub": b64e(self.alice_identity_pub),
+            "bob_identity_pub": b64e(self.bob_identity_pub),
+            "transcript_hash": b64e(self.transcript_hash),
             "send_counter": self.send_counter,
             "recv_counter": self.recv_counter,
             "seen_mailboxes": sorted(self.seen_mailboxes),
@@ -286,6 +304,9 @@ class HelixSession:
             recv_chain_key=b64d(data["recv_chain_key"]),
             send_mailbox_key=b64d(data["send_mailbox_key"]),
             recv_mailbox_key=b64d(data["recv_mailbox_key"]),
+            alice_identity_pub=b64d(data.get("alice_identity_pub", "")) if data.get("alice_identity_pub") else b"",
+            bob_identity_pub=b64d(data.get("bob_identity_pub", "")) if data.get("bob_identity_pub") else b"",
+            transcript_hash=b64d(data.get("transcript_hash", "")) if data.get("transcript_hash") else b"",
             send_counter=int(data["send_counter"]),
             recv_counter=int(data["recv_counter"]),
             seen_mailboxes=set(data.get("seen_mailboxes", [])),
@@ -359,8 +380,6 @@ def _derive_session(
 ) -> HelixSession:
     transcript = canonical_json({"invite": invite.to_dict(), "response": response.to_dict()})
     transcript_hash = sha256(transcript)
-    # Hybrid combiner: the session key depends on both the classical ECDH output
-    # and the NIST ML-KEM-768 output, bound to the full signed transcript.
     master = hkdf(
         classical_secret + pq_secret,
         salt=transcript_hash,
@@ -389,4 +408,7 @@ def _derive_session(
         recv_chain_key=recv_chain,
         send_mailbox_key=send_box,
         recv_mailbox_key=recv_box,
+        alice_identity_pub=b64d(invite.body["alice_identity_pub"]),
+        bob_identity_pub=b64d(response.body["bob_identity_pub"]),
+        transcript_hash=transcript_hash,
     )
