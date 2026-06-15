@@ -54,4 +54,5 @@ def test_checked_in_v0_6_fixture_opens():
 def test_checked_in_response_fixture_decodes():
     decoded = base64.b64decode((FIXTURE_DIR / "response.b64.txt").read_text(encoding="utf-8"))
     response = json.loads(decoded.decode("utf-8"))
-    assert response["body"]["conversation_id"] == _read_json(FIXTURE_DIR / "expected.json")["visible_header"]["v"].replace("LLH-HELIX-v0.2", "xSDARhuMvx5kljmAf3QE2UYpVC6zTWt-")
+    invite = _read_json(FIXTURE_DIR / "invite.json")
+    assert response["body"]["conversation_id"] == invite["body"]["conversation_id"]
