@@ -58,6 +58,18 @@ function titleCase(value) {
   return value ? value.charAt(0).toUpperCase() + value.slice(1) : "Contact";
 }
 
+function writePairingOutput(value) {
+  const output = document.querySelector("#pairingOutput");
+  if (!output) return;
+  output.value = typeof value === "string" ? value : JSON.stringify(value, null, 2);
+}
+
+function readPairingJson(promptText) {
+  const raw = prompt(promptText);
+  if (!raw) return null;
+  return JSON.parse(raw);
+}
+
 async function apiFetch(path, options = {}) {
   const response = await fetch(`${API_BASE}${path}`, {
     headers: { "Content-Type": "application/json" },
@@ -208,6 +220,58 @@ async function refreshActiveContact() {
   await loadContacts();
   if (activeContact) await renderContact(activeContact);
 }
+
+document.querySelector("#createInviteButton").addEventListener("click", async () => {
+  if (!apiOnline) {
+    writePairingOutput("Start the local API before creating a pairing invite.");
+    return;
+  }
+  const label = prompt("Label for this pairing invite", "new-contact") || "new-contact";
+  try {
+    const result = await LeftLevelApi.createPairingInvite(label);
+    writePairingOutput(result);
+    await loadSetupStatus();
+  } catch (error) {
+    writePairingOutput(`create invite failed · ${error.message}`);
+  }
+});
+
+document.querySelector("#acceptInviteButton").addEventListener("click", async () => {
+  if (!apiOnline) {
+    writePairingOutput("Start the local API before accepting a pairing invite.");
+    return;
+  }
+  const contactName = prompt("Local contact name to save", "friend");
+  if (!contactName) return;
+  try {
+    const invite = readPairingJson("Paste invite JSON");
+    if (!invite) return;
+    const result = await LeftLevelApi.acceptPairingInvite(contactName, invite);
+    writePairingOutput(result);
+    await refreshActiveContact();
+  } catch (error) {
+    writePairingOutput(`accept invite failed · ${error.message}`);
+  }
+});
+
+document.querySelector("#finalizePairingButton").addEventListener("click", async () => {
+  if (!apiOnline) {
+    writePairingOutput("Start the local API before finalizing a pairing response.");
+    return;
+  }
+  const draftId = prompt("Draft ID from created invite");
+  const contactName = prompt("Local contact name to save", "friend");
+  if (!draftId || !contactName) return;
+  try {
+    const response = readPairingJson("Paste response JSON");
+    if (!response) return;
+    const result = await LeftLevelApi.finalizePairingResponse(draftId, contactName, response);
+    writePairingOutput(result);
+    await refreshActiveContact();
+  } catch (error) {
+    writePairingOutput(`finalize response failed · ${error.message}`);
+  }
+});
 
 document.querySelector("#receiveButton").addEventListener("click", async () => {
   if (!activeContact) return;
