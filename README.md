@@ -17,15 +17,14 @@ This repository demonstrates a two-person, invite-only, server-blind encrypted c
 - Rotating mailbox IDs so the relay does not need conversation IDs or user IDs.
 - Blind relay that stores only encrypted envelopes by mailbox ID.
 - Fixed-block message padding for small messages.
-- Tests for handshake, encryption, replay rejection, tamper rejection, and relay blindness.
+- Tests for handshake, encryption, replay rejection, tamper rejection, out-of-order receive handling, encrypted vault persistence, and relay blindness.
 
 ## What this prototype does not yet do
 
 - It is **not production-ready**.
 - It has **not been independently audited**.
-- v0.2 supports in-order delivery only.
 - v0.2 supports two users only.
-- v0.2 does not yet include mobile apps, out-of-order skipped-message keys, group MLS-style trees, mixnet routing, or hardened local secure storage.
+- v0.2 does not yet include mobile apps, group MLS-style trees, mixnet routing, hardened OS keychain/keystore integration, or a production local message database.
 - It cannot protect messages displayed on a fully compromised endpoint.
 
 ## Why this is not “stealing Signal”
@@ -56,7 +55,6 @@ openssl list -kem-algorithms | grep -i ML-KEM-768
 ## Run the demo
 
 ```bash
-cd leftlevel-helix-v0.2
 python examples/demo_two_users.py
 ```
 
@@ -71,8 +69,13 @@ Relay audit snapshot after fetches: {}
 ## Run tests
 
 ```bash
-cd leftlevel-helix-v0.2
 pytest -q
+```
+
+## Run the CLI prototype
+
+```bash
+leftlevel-helix --help
 ```
 
 ## Run the prototype relay
@@ -85,7 +88,8 @@ Endpoints:
 
 - `POST /v0/envelopes`
 - `GET /v0/envelopes/{mailbox_id}`
-- `GET /v0/audit` for prototype inspection only
+- `GET /health`
+- `GET /v0/audit` only when audit mode is enabled
 
 ## Security status
 
@@ -96,3 +100,4 @@ See:
 - `PROTOCOL.md`
 - `SECURITY_MODEL.md`
 - `ROADMAP.md`
+- `PRODUCTION_READINESS.md`
