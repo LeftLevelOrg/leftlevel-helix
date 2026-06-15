@@ -1,0 +1,17 @@
+{
+  "body": {
+    "alice_identity_pub": "lUfWkyj-r17CjSYrOAJnZVilq3xy-uO5jiGFUy_yLDo",
+    "alice_mlkem768_pub_pem": "VEVTVC1PTkxZLU1MS0VNLVBVQkxJQzqBbkS9o-Qvuvf0V_FLqgKG1uoTp-4_r70QHDawokQ_GQ",
+    "alice_x25519_pub": "dA8eiIC3MuAQ-kYdB7UxCD7Io1sz4dS_Toqcg3O_YyE",
+    "capabilities": [
+      "hybrid-x25519-mlkem768",
+      "out-of-order-window-64",
+      "rotating-mailboxes",
+      "sealed-headers-v1"
+    ],
+    "conversation_id": "xSDARhuMvx5kljmAf3QE2UYpVC6zTWt-",
+    "identity_model": "invite-only-pseudonymous",
+    "v": "LLH-HELIX-v0.2"
+  },
+  "signature": "osazSYKRAp4TPnNvKQP3xB4rISPWuJV5zzLmjSshbRs3IeC5zNeSut6JQFWTza0oHGx5X6-GaRjaI8SN_2ObBQ"
+}
