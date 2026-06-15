@@ -126,6 +126,15 @@ def test_playground_has_pairing_action_panel():
     assert "LeftLevelApi.finalizePairingResponse" in script
 
 
+def test_playground_verify_button_calls_local_api():
+    script = (PLAYGROUND / "app.js").read_text(encoding="utf-8")
+    assert "#verifyButton" in script
+    assert "LeftLevelApi.verify" in script
+    assert "friend marked verified" in script
+    assert "green means verified" in script
+    assert "friend marked verified for preview only" in script
+
+
 def test_playground_has_v07_composer_shell():
     markup = (PLAYGROUND / "index.html").read_text(encoding="utf-8")
     styles = (PLAYGROUND / "styles.css").read_text(encoding="utf-8")
