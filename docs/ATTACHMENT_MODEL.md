@@ -4,7 +4,7 @@ This document describes the first attachment foundation for LeftLevel Helix.
 
 ## Status
 
-The current implementation is a prototype attachment package model. It supports local encryption, decryption, references, and encrypted local storage for tests and future integration work.
+The current implementation is a prototype attachment package model. It supports local encryption, decryption, references, encrypted local storage, and opaque transfer packages for tests and future integration work.
 
 It is not yet wired into relay-backed send and receive flows.
 
@@ -81,6 +81,21 @@ It supports:
 
 The attachment store is local-only. Relay upload, download, retry, and progress tracking are future work.
 
+## Opaque transfer packages
+
+The `OpaqueAttachmentPackage` type prepares encrypted attachment chunks for a relay-facing transfer path.
+
+A transfer package exposes only:
+
+- transfer format version;
+- opaque attachment identifier;
+- chunk index;
+- chunk nonce;
+- encrypted bytes;
+- encrypted-byte digest.
+
+It intentionally omits file name, media type, plaintext digest, and attachment key. Those fields remain in local storage or inside sealed message payloads.
+
 ## Security boundary
 
 The manifest and reference currently contain fields such as file name and media type. Those fields must be carried inside an encrypted message payload before use with a relay.
@@ -97,7 +112,7 @@ Long text bodies should remain message content when practical. Very large text, 
 
 The next implementation steps are:
 
-1. Add relay transfer tests using opaque attachment references.
+1. Add a relay endpoint for opaque attachment chunks.
 2. Add UI preview states for queued and received attachments.
 3. Wire the desktop playground to send and receive attachment references after tests exist.
 4. Add upload, download, retry, and progress states.
