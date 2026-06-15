@@ -113,7 +113,7 @@ h1, h2, p { margin: 0; }
 
 .conversation {
   display: grid;
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: auto auto auto 1fr auto;
   padding: 28px;
   gap: 18px;
 }
@@ -136,6 +136,17 @@ h1, h2, p { margin: 0; }
 
 .status-card { padding: 16px 18px; color: var(--muted); }
 .status-card strong { color: var(--text); }
+
+.attachment-status-card {
+  display: grid;
+  gap: 10px;
+}
+
+.attachment-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
 
 .messages {
   display: flex;
@@ -225,6 +236,21 @@ h1, h2, p { margin: 0; }
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.attachment-pill.verified {
+  border-color: rgba(110, 231, 183, 0.48);
+  background: rgba(110, 231, 183, 0.12);
+}
+
+.attachment-pill.warning {
+  border-color: rgba(250, 204, 21, 0.52);
+  background: rgba(250, 204, 21, 0.13);
+}
+
+.attachment-pill.blocked {
+  border-color: rgba(251, 113, 133, 0.56);
+  background: rgba(251, 113, 133, 0.14);
 }
 
 .composer-meta {
