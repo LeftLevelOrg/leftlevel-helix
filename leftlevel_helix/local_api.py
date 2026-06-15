@@ -37,6 +37,12 @@ class TestFriendRequest(BaseModel):
     base_name: str = "test-friend"
 
 
+class TestMessageRequest(BaseModel):
+    from_name: str
+    to_name: str
+    message: str = "Hello from LeftLevel local test."
+
+
 class SendRequest(BaseModel):
     message: str
     relay_url: str
@@ -99,6 +105,26 @@ class LocalApiService:
         store = self._store()
         result = store.create_test_friend_pair(base_name=base_name)
         return {**result, "setup": self.setup_status()}
+
+    def send_test_message(self, from_name: str, to_name: str, message: str) -> dict[str, Any]:
+        store = self._store()
+        sender = store.load_session(from_name)
+        envelope = sender.seal(message.encode("utf-8"))
+        store.save_session(from_name, sender)
+        store.record_message(from_name, "sent", message, mailbox_id=envelope.mailbox_id)
+
+        receiver = store.load_session(to_name)
+        opened = receiver.open(envelope).decode("utf-8")
+        store.save_session(to_name, receiver)
+        store.record_message(to_name, "received", opened, mailbox_id=envelope.mailbox_id)
+        return {
+            "status": "delivered",
+            "from": from_name,
+            "to": to_name,
+            "message": opened,
+            "mailbox_id": envelope.mailbox_id,
+            "setup": self.setup_status(),
+        }
 
     def create_pairing_invite(self, label: str = "new-contact") -> dict[str, Any]:
         result = self._store().create_pairing_invite(label=label)
@@ -181,6 +207,10 @@ def create_app(service: LocalApiService) -> FastAPI:
     @app.post("/setup/test-friend")
     def create_test_friend(request: TestFriendRequest):
         return handle(lambda: service.create_test_friend(request.base_name))
+
+    @app.post("/setup/test-message")
+    def send_test_message(request: TestMessageRequest):
+        return handle(lambda: service.send_test_message(request.from_name, request.to_name, request.message))
 
     @app.post("/pairing/invite")
     def create_pairing_invite(request: PairingInviteRequest):
