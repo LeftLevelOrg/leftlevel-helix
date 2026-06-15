@@ -63,3 +63,12 @@ def test_ui_extraction_plan_is_documented():
     assert "Extraction prerequisites" in text
     assert "UI milestones before extraction" in text
     assert "The app should call stable Helix interfaces" in text
+
+
+def test_release_readiness_gates_are_documented():
+    text = (DOCS / "RELEASE_READINESS_GATES.md").read_text(encoding="utf-8")
+    assert "Current status" in text
+    assert "protocol readiness" in text
+    assert "user interface readiness" in text
+    assert "Sign-off record template" in text
+    assert "Blocking conditions" in text
