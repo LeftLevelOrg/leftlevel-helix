@@ -87,6 +87,7 @@ def test_release_engineering_docs_are_documented():
     versioning = (DOCS / "VERSIONING_POLICY.md").read_text(encoding="utf-8")
     dependencies = (DOCS / "DEPENDENCY_INVENTORY.md").read_text(encoding="utf-8")
     artifacts = (DOCS / "RELEASE_ARTIFACT_POLICY.md").read_text(encoding="utf-8")
+    ci_policy = (DOCS / "CI_POLICY.md").read_text(encoding="utf-8")
     changelog = Path("CHANGELOG.md").read_text(encoding="utf-8")
     assert "Package version" in versioning
     assert "Wire protocol name" in versioning
@@ -97,5 +98,8 @@ def test_release_engineering_docs_are_documented():
     assert "Reproducible build plan" in artifacts
     assert "SBOM plan" in artifacts
     assert "Rollback policy" in artifacts
+    assert "Portable test suite" in ci_policy
+    assert "Readiness documentation validation" in ci_policy
+    assert "Production readiness boundary" in ci_policy
     assert "Unreleased" in changelog
     assert "Known limitations" in changelog
