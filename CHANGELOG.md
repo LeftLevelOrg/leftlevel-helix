@@ -18,6 +18,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - UI extraction plan for the future `leftlevel-app` repository.
 - UI pairing flow documentation.
 - UI security-language guide for simple user wording and green/yellow/red indicators.
+- UI safe-automation guide for green/yellow/red send behavior.
 - Release readiness gates and sign-off template.
 - Local interface testing guide.
 - Local API setup status endpoint.
@@ -28,6 +29,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - Desktop playground pairing guidance in setup panel.
 - Desktop playground prototype Add friend action panel.
 - Desktop playground security indicator legend.
+- Desktop playground send safety guard.
 - Desktop playground attachment integrity panel.
 - Local API send and receive endpoints.
 - Playground send and receive button wiring.
