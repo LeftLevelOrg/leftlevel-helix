@@ -72,3 +72,12 @@ def test_release_readiness_gates_are_documented():
     assert "user interface readiness" in text
     assert "Sign-off record template" in text
     assert "Blocking conditions" in text
+
+
+def test_signoff_record_template_is_documented():
+    text = (DOCS / "SIGNOFF_RECORD_TEMPLATE.md").read_text(encoding="utf-8")
+    assert "Release candidate" in text
+    assert "Gate status" in text
+    assert "Evidence links" in text
+    assert "Decision" in text
+    assert "Required statement" in text
