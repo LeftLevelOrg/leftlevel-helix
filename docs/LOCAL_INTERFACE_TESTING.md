@@ -88,13 +88,22 @@ Expected statuses:
 
 ## Prototype Add friend panel
 
-The Add friend panel can call local API prototype actions:
+The Add friend panel can call local API prototype actions through visible fields instead of browser prompt dialogs.
 
-- Create friend invite: creates a local invite and pending encrypted draft, then prints JSON for copy/paste testing;
-- Accept friend invite: asks for a local contact name and pasted invite JSON, then saves a contact and prints response JSON;
-- Finish adding friend: asks for a draft ID, local contact name, and pasted response JSON, then saves the paired contact.
+Fields:
 
-This is a prototype copy/paste flow. A future interface should replace prompts with guided screens and file import/export.
+- Friend name: the local name to save;
+- Invite ID: filled after creating a friend invite;
+- Friend invite JSON: paste a received friend invite here;
+- Friend response JSON: paste a received friend response here.
+
+Actions:
+
+- Create friend invite: creates a local invite and pending encrypted draft, fills the invite ID and invite JSON fields, and prints JSON for copy/paste testing;
+- Accept friend invite: reads the friend name and invite JSON fields, saves a contact, fills the response JSON field, and prints response JSON;
+- Finish adding friend: reads the invite ID, friend name, and response JSON fields, then saves the paired contact.
+
+This is still a prototype copy/paste flow. A future interface should replace JSON copy/paste with guided screens and file import/export.
 
 ## Setup states
 
@@ -113,7 +122,7 @@ The local API can now create the configured encrypted app store. Contact setup c
 
 Do not ask a non-developer friend to test the full workflow yet. The interface still needs:
 
-- guided Add friend screens instead of prompt dialogs;
+- guided Add friend screens instead of JSON copy/paste;
 - UI-based safety-number comparison;
 - clearer setup guidance;
 - packaged app startup;
