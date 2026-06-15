@@ -118,6 +118,25 @@ class AppStore:
         self.save()
         return {"contact_name": contact_name, "safety_short_code": session.safety_number().short_code}
 
+    def create_test_friend_pair(self, *, base_name: str = "test-friend") -> dict[str, Any]:
+        left_name = base_name
+        right_name = f"{base_name}-peer"
+        _validate_contact_name(left_name)
+        _validate_contact_name(right_name)
+        if left_name in self.state["contacts"] or right_name in self.state["contacts"]:
+            raise ValueError("test friend already exists")
+        draft = create_invite(Identity.generate())
+        response, right_session = accept_invite(Identity.generate(), draft.invite)
+        left_session = finalize_invite(draft, response)
+        self.add_contact(left_name, left_session, verified=True)
+        self.add_contact(right_name, right_session, verified=True)
+        return {
+            "status": "created",
+            "friend": left_name,
+            "friend_peer": right_name,
+            "safety_short_code": left_session.safety_number().short_code,
+        }
+
     def pairing_draft_count(self) -> int:
         return len(_ensure_pairing_drafts(self.state))
 
