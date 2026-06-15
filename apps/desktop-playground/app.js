@@ -223,53 +223,53 @@ async function refreshActiveContact() {
 
 document.querySelector("#createInviteButton").addEventListener("click", async () => {
   if (!apiOnline) {
-    writePairingOutput("Start the local API before creating a pairing invite.");
+    writePairingOutput("Start the local API before creating a friend invite.");
     return;
   }
-  const label = prompt("Label for this pairing invite", "new-contact") || "new-contact";
+  const label = prompt("Friend name or label for this invite", "new-friend") || "new-friend";
   try {
     const result = await LeftLevelApi.createPairingInvite(label);
     writePairingOutput(result);
     await loadSetupStatus();
   } catch (error) {
-    writePairingOutput(`create invite failed · ${error.message}`);
+    writePairingOutput(`create friend invite failed · ${error.message}`);
   }
 });
 
 document.querySelector("#acceptInviteButton").addEventListener("click", async () => {
   if (!apiOnline) {
-    writePairingOutput("Start the local API before accepting a pairing invite.");
+    writePairingOutput("Start the local API before accepting a friend invite.");
     return;
   }
-  const contactName = prompt("Local contact name to save", "friend");
+  const contactName = prompt("Friend name to save", "friend");
   if (!contactName) return;
   try {
-    const invite = readPairingJson("Paste invite JSON");
+    const invite = readPairingJson("Paste friend invite JSON");
     if (!invite) return;
     const result = await LeftLevelApi.acceptPairingInvite(contactName, invite);
     writePairingOutput(result);
     await refreshActiveContact();
   } catch (error) {
-    writePairingOutput(`accept invite failed · ${error.message}`);
+    writePairingOutput(`accept friend invite failed · ${error.message}`);
   }
 });
 
 document.querySelector("#finalizePairingButton").addEventListener("click", async () => {
   if (!apiOnline) {
-    writePairingOutput("Start the local API before finalizing a pairing response.");
+    writePairingOutput("Start the local API before finishing Add friend.");
     return;
   }
-  const draftId = prompt("Draft ID from created invite");
-  const contactName = prompt("Local contact name to save", "friend");
+  const draftId = prompt("Invite ID from created friend invite");
+  const contactName = prompt("Friend name to save", "friend");
   if (!draftId || !contactName) return;
   try {
-    const response = readPairingJson("Paste response JSON");
+    const response = readPairingJson("Paste friend response JSON");
     if (!response) return;
     const result = await LeftLevelApi.finalizePairingResponse(draftId, contactName, response);
     writePairingOutput(result);
     await refreshActiveContact();
   } catch (error) {
-    writePairingOutput(`finalize response failed · ${error.message}`);
+    writePairingOutput(`finish Add friend failed · ${error.message}`);
   }
 });
 
