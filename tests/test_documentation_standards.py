@@ -74,6 +74,17 @@ def test_ui_pairing_flow_is_documented():
     assert "Security boundary" in text
 
 
+def test_ui_security_language_is_documented():
+    text = (DOCS / "UI_SECURITY_LANGUAGE.md").read_text(encoding="utf-8")
+    assert "User-facing names" in text
+    assert "Add friend" in text
+    assert "Color indicators" in text
+    assert "green" in text
+    assert "yellow" in text
+    assert "red" in text
+    assert "Secure-by-default behavior" in text
+
+
 def test_release_readiness_gates_are_documented():
     text = (DOCS / "RELEASE_READINESS_GATES.md").read_text(encoding="utf-8")
     assert "Current status" in text
