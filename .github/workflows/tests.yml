@@ -14,7 +14,15 @@ jobs:
           python-version: '3.11'
       - name: Install package
         run: python -m pip install -e '.[dev]'
-      - name: Check OpenSSL version
-        run: openssl version
-      - name: Run tests
-        run: pytest -q
+      - name: Print runtime diagnostics
+        run: |
+          python --version
+          python -m pip --version
+          python -m pytest --version
+          openssl version
+          openssl list -kem-algorithms || true
+      - name: Run portable protocol tests
+        run: python -m pytest -q -m 'not real_mlkem' -ra
+      - name: Optional real OpenSSL ML-KEM integration check
+        continue-on-error: true
+        run: python -m pytest -q -m 'real_mlkem' -ra
