@@ -82,6 +82,15 @@ class LocalApiService:
             "pairing": pairing.to_dict(),
         }
 
+    def create_store(self) -> dict[str, Any]:
+        if os.path.exists(self.store_path):
+            return {"status": "already_exists", "setup": self.setup_status()}
+        parent = os.path.dirname(self.store_path)
+        if parent:
+            os.makedirs(parent, exist_ok=True)
+        AppStore.create(self.store_path, self.passphrase)
+        return {"status": "created", "setup": self.setup_status()}
+
     def create_pairing_invite(self, label: str = "new-contact") -> dict[str, Any]:
         result = self._store().create_pairing_invite(label=label)
         return {"status": "invite_created", **result}
@@ -155,6 +164,10 @@ def create_app(service: LocalApiService) -> FastAPI:
     @app.get("/setup/status")
     def setup_status():
         return handle(service.setup_status)
+
+    @app.post("/setup/create")
+    def create_store():
+        return handle(service.create_store)
 
     @app.post("/pairing/invite")
     def create_pairing_invite(request: PairingInviteRequest):
