@@ -19,6 +19,7 @@ const LeftLevelApi = (() => {
     defaultRelayUrl,
     health: () => request("/health"),
     setupStatus: () => request("/setup/status"),
+    createStore: () => request("/setup/create", { method: "POST" }),
     createPairingInvite: (label) => request("/pairing/invite", {
       method: "POST",
       body: JSON.stringify({ label })
