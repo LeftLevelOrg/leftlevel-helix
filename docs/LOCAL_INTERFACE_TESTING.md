@@ -6,7 +6,7 @@ This guide explains how to view the current LeftLevel desktop playground and how
 
 The interface is now more than a static mockup, but it is still a playground. It can show contacts, trust states, message history, local setup status, Add friend actions, composer behavior, attachment queue states, and attachment integrity states.
 
-The interface can call the local API for encrypted store creation, setup readiness, one-click test friend creation, prototype Add friend actions, message send, and message receive when the local API and test relay are running.
+The interface can call the local API for encrypted store creation, setup readiness, one-click test friend creation, one-click local test message delivery, prototype Add friend actions, message send, and message receive when the local API and test relay are running.
 
 It is not yet a packaged desktop app and should not be used for sensitive real-world messages.
 
@@ -69,6 +69,7 @@ Expected behavior:
 - the playground detects the local API;
 - Open encrypted store creates the configured local vault if it is missing;
 - Create test friend creates a verified local test pair for development;
+- Send test message delivers a local encrypted loopback message between the test pair;
 - the local setup panel shows store readiness and contact count;
 - message history comes from the encrypted local app store after contacts exist;
 - Send uses the local API message endpoint;
@@ -95,6 +96,14 @@ This creates a local two-sided test pair in the encrypted store so the playgroun
 
 This is for development and local interface testing only. A real friend still requires the Add friend invite flow and safety-number verification.
 
+## Send test message
+
+The Send test message button calls the local API test message endpoint.
+
+It sends an encrypted local loopback message from the test friend to the generated peer contact, then records both the sent and received history entries in the encrypted local store.
+
+This is for development and local interface testing only. It confirms the local store, session sealing, session opening, and UI refresh path without requiring manual relay steps.
+
 ## Prototype Add friend panel
 
 The Add friend panel can call local API prototype actions through visible fields instead of browser prompt dialogs.
@@ -109,6 +118,7 @@ Fields:
 Actions:
 
 - Create test friend: creates a local verified test pair for development;
+- Send test message: sends and receives a local encrypted loopback message for development;
 - Create friend invite: creates a local invite and pending encrypted draft, fills the invite ID and invite JSON fields, and prints JSON for copy/paste testing;
 - Accept friend invite: reads the friend name and invite JSON fields, saves a contact, fills the response JSON field, and prints response JSON;
 - Finish adding friend: reads the invite ID, friend name, and response JSON fields, then saves the paired contact.
