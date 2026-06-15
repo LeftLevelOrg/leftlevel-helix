@@ -20,6 +20,7 @@ REQUIRED_DOCS = {
     "docs/UI_PAIRING_FLOW.md": ["Pairing states", "Future pairing milestones", "Security boundary"],
     "docs/UI_SECURITY_LANGUAGE.md": ["User-facing names", "Color indicators", "Secure-by-default behavior"],
     "docs/UI_TESTING_RULES.md": ["Wording changes", "Color and text indicators", "Expected failures during iteration"],
+    "docs/UI_FRIEND_VERIFICATION.md": ["Verify action", "Safety boundary", "Future improvements"],
     "docs/LOCAL_INTERFACE_TESTING.md": ["Current status"],
 }
 
