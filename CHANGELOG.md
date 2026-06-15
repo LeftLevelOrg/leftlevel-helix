@@ -20,9 +20,12 @@ All notable changes to LeftLevel Helix should be documented here.
 - Release readiness gates and sign-off template.
 - Local interface testing guide.
 - Local API setup status endpoint.
+- Local API pairing actions for invite, accept, and finalize.
 - Pairing status contract for setup readiness.
+- App-store pairing draft storage.
 - Desktop playground local setup status panel.
 - Desktop playground pairing guidance in setup panel.
+- Desktop playground prototype pairing action panel.
 - Desktop playground attachment integrity panel.
 - Local API send and receive endpoints.
 - Playground send and receive button wiring.
@@ -38,7 +41,8 @@ All notable changes to LeftLevel Helix should be documented here.
 ### Known limitations
 
 - The interface is still a playground, not a packaged app.
-- Pairing and safety-number comparison are not yet fully UI-driven.
+- Pairing uses prototype prompt dialogs and JSON copy/paste, not polished guided screens.
+- Safety-number comparison is not yet fully UI-driven.
 - Attachment transfer is not yet fully wired through relay-backed UI flows.
 - Release artifacts are not yet signed.
 - Production readiness gates are incomplete.
