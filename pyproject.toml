@@ -1,7 +1,7 @@
 [project]
 name = "leftlevel-helix"
-version = "0.2.0"
-description = "LeftLevel Helix v0.2 prototype: server-blind hybrid post-quantum E2EE messaging demo"
+version = "0.3.0"
+description = "LeftLevel Helix v0.3 prototype: server-blind hybrid post-quantum E2EE messaging demo"
 requires-python = ">=3.11"
 dependencies = [
   "cryptography>=41",
@@ -21,3 +21,4 @@ markers = [
 
 [project.scripts]
 leftlevel-helix = "leftlevel_helix.cli:main"
+leftlevel-relay = "leftlevel_helix.relay_cli:main"
