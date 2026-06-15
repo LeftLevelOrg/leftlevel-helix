@@ -41,6 +41,26 @@ class LocalApiService:
     def health(self) -> dict[str, str]:
         return {"status": "ok", "component": "leftlevel-local-api"}
 
+    def setup_status(self) -> dict[str, Any]:
+        path_exists = os.path.exists(self.store_path)
+        if not path_exists:
+            return {
+                "status": "missing_store",
+                "store_path": self.store_path,
+                "store_exists": False,
+                "contact_count": 0,
+                "ready_for_interface_test": False,
+            }
+        store = self._store()
+        contact_count = len(store.contact_views())
+        return {
+            "status": "ready" if contact_count > 0 else "empty_store",
+            "store_path": self.store_path,
+            "store_exists": True,
+            "contact_count": contact_count,
+            "ready_for_interface_test": contact_count > 0,
+        }
+
     def contacts(self) -> list[dict[str, Any]]:
         return [asdict(view) for view in self._store().contact_views()]
 
@@ -98,6 +118,10 @@ def create_app(service: LocalApiService) -> FastAPI:
     @app.get("/health")
     def health():
         return service.health()
+
+    @app.get("/setup/status")
+    def setup_status():
+        return handle(service.setup_status)
 
     @app.get("/contacts")
     def contacts():
