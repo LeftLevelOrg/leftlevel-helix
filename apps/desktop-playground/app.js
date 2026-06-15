@@ -316,6 +316,24 @@ document.querySelector("#createTestFriendButton").addEventListener("click", asyn
   }
 });
 
+document.querySelector("#sendTestMessageButton").addEventListener("click", async () => {
+  if (!apiOnline) {
+    writePairingOutput("Start the local API before sending a test message.");
+    return;
+  }
+  const fromName = inputValue("#friendNameInput", "test-friend");
+  const toName = `${fromName}-peer`;
+  const message = inputValue("#messageInput", "Hello from LeftLevel local test.");
+  try {
+    const result = await LeftLevelApi.sendTestMessage(fromName, toName, message);
+    writePairingOutput(result);
+    renderBridgeStatus("test message delivered locally · send and receive both worked");
+    await refreshActiveContact();
+  } catch (error) {
+    writePairingOutput(`send test message failed · ${error.message}`);
+  }
+});
+
 document.querySelector("#createInviteButton").addEventListener("click", async () => {
   if (!apiOnline) {
     writePairingOutput("Start the local API before creating a friend invite.");
