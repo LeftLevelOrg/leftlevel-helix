@@ -58,15 +58,26 @@ function titleCase(value) {
   return value ? value.charAt(0).toUpperCase() + value.slice(1) : "Contact";
 }
 
+function inputValue(selector, fallback = "") {
+  return document.querySelector(selector)?.value.trim() || fallback;
+}
+
 function writePairingOutput(value) {
   const output = document.querySelector("#pairingOutput");
   if (!output) return;
   output.value = typeof value === "string" ? value : JSON.stringify(value, null, 2);
 }
 
-function readPairingJson(promptText) {
-  const raw = prompt(promptText);
-  if (!raw) return null;
+function setPairingField(selector, value) {
+  const field = document.querySelector(selector);
+  if (field) field.value = value || "";
+}
+
+function parseJsonField(selector, label) {
+  const raw = inputValue(selector);
+  if (!raw) {
+    throw new Error(`${label} is required`);
+  }
   return JSON.parse(raw);
 }
 
@@ -294,9 +305,11 @@ document.querySelector("#createInviteButton").addEventListener("click", async ()
     writePairingOutput("Start the local API before creating a friend invite.");
     return;
   }
-  const label = prompt("Friend name or label for this invite", "new-friend") || "new-friend";
+  const label = inputValue("#friendNameInput", "new-friend");
   try {
     const result = await LeftLevelApi.createPairingInvite(label);
+    setPairingField("#draftIdInput", result.draft_id);
+    setPairingField("#inviteInput", JSON.stringify(result.invite, null, 2));
     writePairingOutput(result);
     await loadSetupStatus();
   } catch (error) {
@@ -309,12 +322,11 @@ document.querySelector("#acceptInviteButton").addEventListener("click", async ()
     writePairingOutput("Start the local API before accepting a friend invite.");
     return;
   }
-  const contactName = prompt("Friend name to save", "friend");
-  if (!contactName) return;
+  const contactName = inputValue("#friendNameInput", "friend");
   try {
-    const invite = readPairingJson("Paste friend invite JSON");
-    if (!invite) return;
+    const invite = parseJsonField("#inviteInput", "Friend invite JSON");
     const result = await LeftLevelApi.acceptPairingInvite(contactName, invite);
+    setPairingField("#responseInput", JSON.stringify(result.response, null, 2));
     writePairingOutput(result);
     await refreshActiveContact();
   } catch (error) {
@@ -327,12 +339,11 @@ document.querySelector("#finalizePairingButton").addEventListener("click", async
     writePairingOutput("Start the local API before finishing Add friend.");
     return;
   }
-  const draftId = prompt("Invite ID from created friend invite");
-  const contactName = prompt("Friend name to save", "friend");
-  if (!draftId || !contactName) return;
+  const draftId = inputValue("#draftIdInput");
+  const contactName = inputValue("#friendNameInput", "friend");
   try {
-    const response = readPairingJson("Paste friend response JSON");
-    if (!response) return;
+    if (!draftId) throw new Error("Invite ID is required");
+    const response = parseJsonField("#responseInput", "Friend response JSON");
     const result = await LeftLevelApi.finalizePairingResponse(draftId, contactName, response);
     writePairingOutput(result);
     await refreshActiveContact();
