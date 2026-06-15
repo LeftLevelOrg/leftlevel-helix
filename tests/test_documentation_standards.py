@@ -54,3 +54,12 @@ def test_repository_strategy_is_documented():
     assert "leftlevel-relay" in text
     assert "Keep the playground in this repository for now" in text
     assert "Security-first rule" in text
+
+
+def test_ui_extraction_plan_is_documented():
+    text = (DOCS / "UI_EXTRACTION_PLAN.md").read_text(encoding="utf-8")
+    assert "apps/desktop-playground" in text
+    assert "LeftLevelOrg/leftlevel-app" in text
+    assert "Extraction prerequisites" in text
+    assert "UI milestones before extraction" in text
+    assert "The app should call stable Helix interfaces" in text
