@@ -18,6 +18,7 @@ REQUIRED_DOCS = {
     "docs/REPOSITORY_STRATEGY.md": ["Recommended repository boundaries"],
     "docs/UI_EXTRACTION_PLAN.md": ["Extraction prerequisites"],
     "docs/UI_PAIRING_FLOW.md": ["Pairing states", "Future pairing milestones", "Security boundary"],
+    "docs/UI_SECURITY_LANGUAGE.md": ["User-facing names", "Color indicators", "Secure-by-default behavior"],
     "docs/LOCAL_INTERFACE_TESTING.md": ["Current status"],
 }
 
