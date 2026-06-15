@@ -79,6 +79,21 @@ function normalizeContact(contact) {
   };
 }
 
+function setupStatusText(status) {
+  const pairing = status.pairing;
+  const pairingHint = pairing ? ` · ${pairing.label}: ${pairing.next_action}` : "";
+  if (status.ready_for_interface_test) {
+    return `ready · encrypted store connected · ${status.contact_count} contact(s)${pairingHint}`;
+  }
+  if (status.status === "empty_store") {
+    return `encrypted store connected · add or pair a contact before testing${pairingHint}`;
+  }
+  if (status.status === "missing_store") {
+    return `local API connected · encrypted store file is missing${pairingHint}`;
+  }
+  return `setup status: ${status.status}${pairingHint}`;
+}
+
 async function loadSetupStatus() {
   const target = document.querySelector("#setupStatus");
   if (!target) return;
@@ -88,15 +103,7 @@ async function loadSetupStatus() {
   }
   try {
     const status = await LeftLevelApi.setupStatus();
-    if (status.ready_for_interface_test) {
-      target.textContent = `ready · encrypted store connected · ${status.contact_count} contact(s)`;
-    } else if (status.status === "empty_store") {
-      target.textContent = "encrypted store connected · add or pair a contact before testing";
-    } else if (status.status === "missing_store") {
-      target.textContent = "local API connected · encrypted store file is missing";
-    } else {
-      target.textContent = `setup status: ${status.status}`;
-    }
+    target.textContent = setupStatusText(status);
   } catch (error) {
     target.textContent = `setup check failed · ${error.message}`;
   }
