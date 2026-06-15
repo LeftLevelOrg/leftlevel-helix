@@ -33,6 +33,10 @@ class PairingFinalizeRequest(BaseModel):
     response: dict[str, Any]
 
 
+class TestFriendRequest(BaseModel):
+    base_name: str = "test-friend"
+
+
 class SendRequest(BaseModel):
     message: str
     relay_url: str
@@ -90,6 +94,11 @@ class LocalApiService:
             os.makedirs(parent, exist_ok=True)
         AppStore.create(self.store_path, self.passphrase)
         return {"status": "created", "setup": self.setup_status()}
+
+    def create_test_friend(self, base_name: str = "test-friend") -> dict[str, Any]:
+        store = self._store()
+        result = store.create_test_friend_pair(base_name=base_name)
+        return {**result, "setup": self.setup_status()}
 
     def create_pairing_invite(self, label: str = "new-contact") -> dict[str, Any]:
         result = self._store().create_pairing_invite(label=label)
@@ -168,6 +177,10 @@ def create_app(service: LocalApiService) -> FastAPI:
     @app.post("/setup/create")
     def create_store():
         return handle(service.create_store)
+
+    @app.post("/setup/test-friend")
+    def create_test_friend(request: TestFriendRequest):
+        return handle(lambda: service.create_test_friend(request.base_name))
 
     @app.post("/pairing/invite")
     def create_pairing_invite(request: PairingInviteRequest):
