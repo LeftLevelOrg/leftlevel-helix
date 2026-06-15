@@ -81,6 +81,28 @@ def test_local_api_setup_status_missing_store(tmp_path):
     assert status["pairing"]["blocks_friend_testing"] is True
 
 
+def test_local_api_pairing_actions_create_contacts(tmp_path):
+    alice_path = tmp_path / "alice.llh.vault"
+    bob_path = tmp_path / "bob.llh.vault"
+    AppStore.create(str(alice_path), "correct horse battery")
+    AppStore.create(str(bob_path), "correct horse battery")
+    alice_api = LocalApiService(store_path=str(alice_path), passphrase="correct horse battery")
+    bob_api = LocalApiService(store_path=str(bob_path), passphrase="correct horse battery")
+
+    invite = alice_api.create_pairing_invite("bob")
+    assert invite["status"] == "invite_created"
+    assert invite["draft_id"]
+
+    response = bob_api.accept_pairing_invite("alice", invite["invite"])
+    assert response["status"] == "response_created"
+    assert bob_api.contacts()[0]["name"] == "alice"
+
+    final = alice_api.finalize_pairing_response(invite["draft_id"], "bob", response["response"])
+    assert final["status"] == "paired"
+    assert alice_api.contacts()[0]["name"] == "bob"
+    assert alice_api.contacts()[0]["safety_short_code"] == bob_api.contacts()[0]["safety_short_code"]
+
+
 def test_local_api_service_send_records_history(tmp_path, monkeypatch):
     alice, _bob = make_pair()
     path = tmp_path / "store.llh.vault"
@@ -121,6 +143,9 @@ def test_local_api_routes_exist(tmp_path):
     routes = {route.path for route in app.routes}
     assert "/health" in routes
     assert "/setup/status" in routes
+    assert "/pairing/invite" in routes
+    assert "/pairing/accept" in routes
+    assert "/pairing/finalize" in routes
     assert "/contacts" in routes
     assert "/contacts/{name}/history" in routes
     assert "/contacts/{name}/rename" in routes
