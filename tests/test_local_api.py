@@ -120,6 +120,24 @@ def test_local_api_create_test_friend(tmp_path):
     assert {contact["name"] for contact in service.contacts()} == {"demo-friend", "demo-friend-peer"}
 
 
+def test_local_api_send_test_message_loopback(tmp_path):
+    path = tmp_path / "store.llh.vault"
+    AppStore.create(str(path), "correct horse battery")
+    service = LocalApiService(store_path=str(path), passphrase="correct horse battery")
+    service.create_test_friend("demo-friend")
+
+    result = service.send_test_message("demo-friend", "demo-friend-peer", "hello loopback")
+
+    assert result["status"] == "delivered"
+    assert result["from"] == "demo-friend"
+    assert result["to"] == "demo-friend-peer"
+    assert result["message"] == "hello loopback"
+    assert service.history("demo-friend")[-1]["direction"] == "sent"
+    assert service.history("demo-friend")[-1]["body"] == "hello loopback"
+    assert service.history("demo-friend-peer")[-1]["direction"] == "received"
+    assert service.history("demo-friend-peer")[-1]["body"] == "hello loopback"
+
+
 def test_local_api_pairing_actions_create_contacts(tmp_path):
     alice_path = tmp_path / "alice.llh.vault"
     bob_path = tmp_path / "bob.llh.vault"
@@ -184,6 +202,7 @@ def test_local_api_routes_exist(tmp_path):
     assert "/setup/status" in routes
     assert "/setup/create" in routes
     assert "/setup/test-friend" in routes
+    assert "/setup/test-message" in routes
     assert "/pairing/invite" in routes
     assert "/pairing/accept" in routes
     assert "/pairing/finalize" in routes
