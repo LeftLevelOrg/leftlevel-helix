@@ -13,7 +13,6 @@
 
 - Production security claims.
 - Large group messaging.
-- Out-of-order delivery.
 - Strong global traffic-analysis resistance.
 - Mobile endpoint hardening.
 
@@ -96,15 +95,16 @@ The relay does not need:
 - group membership
 - plaintext
 
-## Replay protection
+## Replay and out-of-order handling
 
 A consumed mailbox ID is remembered. Reusing the same envelope is rejected.
+
+v0.2 includes a bounded skipped-message-key window. If a later mailbox arrives before an earlier mailbox, the receiver derives and caches skipped message keys up to the configured window. Messages outside that window are rejected without advancing state.
 
 ## Known v0.2 limitations
 
 - The `direction` field is authenticated but visible. A future version should encrypt more header fields and keep only the mailbox visible to the relay.
-- In-order delivery only.
-- No skipped-message key cache yet.
+- Out-of-order delivery is supported only within a bounded skipped-message-key window.
 - No group tree or sender-key system yet.
 - No periodic post-quantum rekey yet after the initial handshake.
 - No local encrypted database yet.
