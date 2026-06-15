@@ -79,6 +79,29 @@ function normalizeContact(contact) {
   };
 }
 
+async function loadSetupStatus() {
+  const target = document.querySelector("#setupStatus");
+  if (!target) return;
+  if (!apiOnline) {
+    target.textContent = "demo mode · local API not connected";
+    return;
+  }
+  try {
+    const status = await LeftLevelApi.setupStatus();
+    if (status.ready_for_interface_test) {
+      target.textContent = `ready · encrypted store connected · ${status.contact_count} contact(s)`;
+    } else if (status.status === "empty_store") {
+      target.textContent = "encrypted store connected · add or pair a contact before testing";
+    } else if (status.status === "missing_store") {
+      target.textContent = "local API connected · encrypted store file is missing";
+    } else {
+      target.textContent = `setup status: ${status.status}`;
+    }
+  } catch (error) {
+    target.textContent = `setup check failed · ${error.message}`;
+  }
+}
+
 async function loadContacts() {
   try {
     const remoteContacts = await apiFetch("/contacts");
@@ -92,10 +115,11 @@ async function loadContacts() {
   renderContacts();
   if (activeContact) await renderContact(activeContact);
   renderBridgeStatus();
+  await loadSetupStatus();
 }
 
 function renderBridgeStatus(message) {
-  const card = document.querySelector(".status-card span");
+  const card = document.querySelector(".status-card:not(.setup-status-card) span");
   if (message) {
     card.textContent = message;
     return;
