@@ -27,3 +27,20 @@ def test_documentation_standards_exist():
     text = (DOCS / "DOCUMENTATION_STANDARDS.md").read_text(encoding="utf-8")
     assert "professional, neutral, project-focused" in text
     assert "Security language" in text
+
+
+def test_project_values_are_documented():
+    text = (DOCS / "PROJECT_VALUES.md").read_text(encoding="utf-8")
+    assert "Security and privacy protection" in text
+    assert "Fast and reliable messaging" in text
+    assert "User-friendly interface" in text
+    assert "Performance should not override the security model" in text
+
+
+def test_website_messaging_brief_is_documented():
+    text = (DOCS / "WEBSITE_MESSAGING_BRIEF.md").read_text(encoding="utf-8")
+    assert "security-first open-source messaging protocol" in text
+    assert "Secure by design" in text
+    assert "Fast by engineering" in text
+    assert "Usable by default" in text
+    assert "not production-ready" in text
