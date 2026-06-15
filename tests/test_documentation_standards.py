@@ -86,11 +86,16 @@ def test_signoff_record_template_is_documented():
 def test_release_engineering_docs_are_documented():
     versioning = (DOCS / "VERSIONING_POLICY.md").read_text(encoding="utf-8")
     dependencies = (DOCS / "DEPENDENCY_INVENTORY.md").read_text(encoding="utf-8")
+    artifacts = (DOCS / "RELEASE_ARTIFACT_POLICY.md").read_text(encoding="utf-8")
     changelog = Path("CHANGELOG.md").read_text(encoding="utf-8")
     assert "Package version" in versioning
     assert "Wire protocol name" in versioning
     assert "Changelog rule" in versioning
     assert "Runtime dependencies" in dependencies
     assert "Production readiness requirements" in dependencies
+    assert "Signing policy" in artifacts
+    assert "Reproducible build plan" in artifacts
+    assert "SBOM plan" in artifacts
+    assert "Rollback policy" in artifacts
     assert "Unreleased" in changelog
     assert "Known limitations" in changelog
