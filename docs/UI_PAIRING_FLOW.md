@@ -4,9 +4,15 @@ This document describes the intended pairing flow for the future app interface.
 
 ## Current status
 
-The current interface does not yet perform full pairing from the UI.
+The current playground can call local API pairing actions for copy/paste testing:
 
-The local API now reports pairing readiness through setup status so the UI can show whether pairing is blocking interface testing.
+- create invite;
+- accept invite;
+- finalize response.
+
+The flow is still a prototype. It uses prompt dialogs and a JSON output box rather than polished screens.
+
+The local API also reports pairing readiness through setup status so the UI can show whether pairing is blocking interface testing.
 
 ## Pairing states
 
@@ -23,6 +29,16 @@ Current states:
 - `needs_pairing`: no paired contacts are available;
 - `paired_contacts_available`: at least one paired contact is available.
 
+## Pairing actions
+
+The local API exposes prototype pairing actions:
+
+- create a local invite and encrypted draft;
+- accept a remote invite and create a local response;
+- finalize a remote response and save the paired contact.
+
+The playground exposes these actions through the pairing panel and writes copy/paste JSON into the output box.
+
 ## UI behavior
 
 The interface should:
@@ -38,6 +54,7 @@ The interface should:
 The future UI should support:
 
 - create encrypted local store;
+- replace prompt dialogs with guided forms;
 - generate invite file or invite text;
 - import response file or response text;
 - save paired contact into the encrypted local store;
