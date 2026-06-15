@@ -12,12 +12,12 @@
 
 ## v0.2 - Usability and durability
 
-- [ ] Export/import complete session state.
+- [x] Export/import complete session state through encrypted vault files.
 - [ ] Encrypted local database.
 - [ ] Desktop UI prototype.
 - [ ] Relay HTTP client.
 - [ ] Better error handling.
-- [ ] Out-of-order message receive window.
+- [x] Out-of-order message receive window.
 
 ## v0.3 - Security hardening
 
