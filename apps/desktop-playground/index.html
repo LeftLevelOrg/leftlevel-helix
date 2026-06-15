@@ -60,9 +60,25 @@
           <div class="message sent">Testing the LeftLevel playground UI.</div>
         </section>
 
-        <footer class="composer">
-          <input id="messageInput" placeholder="Write a message…" />
-          <button id="sendButton">Send</button>
+        <footer class="composer composer-v07">
+          <div class="composer-tools" aria-label="Message tools">
+            <button id="emojiButton" type="button" title="Emoji-ready Unicode input">😊</button>
+            <label class="tool-button" for="attachmentInput" title="Queue images and files">
+              📎
+              <input id="attachmentInput" type="file" multiple />
+            </label>
+          </div>
+          <div class="composer-main">
+            <textarea id="messageInput" rows="2" placeholder="Write a long message, paste emoji, or queue files…"></textarea>
+            <div class="attachment-queue" id="attachmentQueue" aria-live="polite">
+              <span>No files queued</span>
+            </div>
+            <div class="composer-meta">
+              <span id="messageStats">0 characters · Unicode ready</span>
+              <span>Attachments are queued locally in this UI slice</span>
+            </div>
+          </div>
+          <button id="sendButton" type="button">Send</button>
         </footer>
       </main>
     </div>
