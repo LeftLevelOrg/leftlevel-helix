@@ -42,6 +42,29 @@ ciphertext: encrypted envelope
 
 The relay does not need to know Alice, Bob, a phone number, an email, or a permanent username.
 
+## Renaming contacts
+
+A contact name is only a local label. If Alice renames `bob` to `robert`, the connection does not change.
+
+The app preserves:
+
+- session state;
+- ratchet counters;
+- trust state;
+- safety number;
+- peer identity fingerprint;
+- sent and received message history.
+
+Only the local display name changes.
+
+The CLI command is:
+
+```bash
+leftlevel-app rename-contact bob robert
+```
+
+This does not notify the other person because it is not a protocol identity change. It is the same as changing a nickname in an address book.
+
 ## How two people find each other
 
 LeftLevel uses an invite flow:
