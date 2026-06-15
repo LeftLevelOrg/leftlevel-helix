@@ -15,6 +15,9 @@ dev = ["pytest>=7"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+markers = [
+  "real_mlkem: requires a real OpenSSL 3.5+ provider with ML-KEM-768 support",
+]
 
 [project.scripts]
 leftlevel-helix = "leftlevel_helix.cli:main"
