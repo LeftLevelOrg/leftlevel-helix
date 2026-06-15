@@ -129,6 +129,10 @@ def test_playground_has_pairing_action_panel():
 def test_playground_verify_button_calls_local_api():
     script = (PLAYGROUND / "app.js").read_text(encoding="utf-8")
     assert "#verifyButton" in script
+    assert "confirm(" in script
+    assert "Only continue if you compared this safety number" in script
+    assert "verification cancelled" in script
+    assert "compare safety numbers first" in script
     assert "LeftLevelApi.verify" in script
     assert "friend marked verified" in script
     assert "green means verified" in script
