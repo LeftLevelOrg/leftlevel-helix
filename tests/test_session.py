@@ -66,6 +66,18 @@ def test_no_plaintext_in_envelope():
     assert b"launch" not in serialized
 
 
+def test_visible_header_is_minimized():
+    alice, _bob = make_pair()
+    env = alice.seal(b"metadata check", padding_block=512)
+    assert env.header == {
+        "v": "LLH-HELIX-v0.2",
+        "mailbox_id": env.mailbox_id,
+        "mode": "sealed-header-v1",
+    }
+    assert "direction" not in env.header
+    assert "padding_block" not in env.header
+
+
 def test_session_state_roundtrip():
     alice, bob = make_pair()
     restored_bob = HelixSession.from_state_dict(bob.to_state_dict())
