@@ -18,6 +18,21 @@ class RenameRequest(BaseModel):
     new_name: str
 
 
+class PairingInviteRequest(BaseModel):
+    label: str = "new-contact"
+
+
+class PairingAcceptRequest(BaseModel):
+    contact_name: str
+    invite: dict[str, Any]
+
+
+class PairingFinalizeRequest(BaseModel):
+    draft_id: str
+    contact_name: str
+    response: dict[str, Any]
+
+
 class SendRequest(BaseModel):
     message: str
     relay_url: str
@@ -62,9 +77,22 @@ class LocalApiService:
             "store_path": self.store_path,
             "store_exists": True,
             "contact_count": contact_count,
+            "pending_pairing_drafts": store.pairing_draft_count(),
             "ready_for_interface_test": contact_count > 0,
             "pairing": pairing.to_dict(),
         }
+
+    def create_pairing_invite(self, label: str = "new-contact") -> dict[str, Any]:
+        result = self._store().create_pairing_invite(label=label)
+        return {"status": "invite_created", **result}
+
+    def accept_pairing_invite(self, contact_name: str, invite: dict[str, Any]) -> dict[str, Any]:
+        result = self._store().accept_pairing_invite(contact_name, invite)
+        return {"status": "response_created", **result}
+
+    def finalize_pairing_response(self, draft_id: str, contact_name: str, response: dict[str, Any]) -> dict[str, Any]:
+        result = self._store().finalize_pairing_response(draft_id, contact_name, response)
+        return {"status": "paired", **result}
 
     def contacts(self) -> list[dict[str, Any]]:
         return [asdict(view) for view in self._store().contact_views()]
@@ -127,6 +155,18 @@ def create_app(service: LocalApiService) -> FastAPI:
     @app.get("/setup/status")
     def setup_status():
         return handle(service.setup_status)
+
+    @app.post("/pairing/invite")
+    def create_pairing_invite(request: PairingInviteRequest):
+        return handle(lambda: service.create_pairing_invite(request.label))
+
+    @app.post("/pairing/accept")
+    def accept_pairing_invite(request: PairingAcceptRequest):
+        return handle(lambda: service.accept_pairing_invite(request.contact_name, request.invite))
+
+    @app.post("/pairing/finalize")
+    def finalize_pairing_response(request: PairingFinalizeRequest):
+        return handle(lambda: service.finalize_pairing_response(request.draft_id, request.contact_name, request.response))
 
     @app.get("/contacts")
     def contacts():
