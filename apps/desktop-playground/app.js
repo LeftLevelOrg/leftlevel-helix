@@ -8,6 +8,9 @@ const fallbackContacts = [
     safety_short_code: "123-456-789-012",
     sent: 1,
     received: 1,
+    attachments: [
+      { name: "trip-photo.jpg", sizeLabel: "2.1 MB", status: "verified" }
+    ],
     messages: [
       { direction: "received", body: "Hello from the encrypted local app store." },
       { direction: "sent", body: "Testing the LeftLevel playground UI." }
@@ -20,6 +23,9 @@ const fallbackContacts = [
     safety_short_code: "789-222-451-009",
     sent: 0,
     received: 1,
+    attachments: [
+      { name: "document.bin", sizeLabel: "418 KB", status: "warning" }
+    ],
     messages: [{ direction: "received", body: "New contact waiting for verification." }]
   },
   {
@@ -29,6 +35,9 @@ const fallbackContacts = [
     safety_short_code: "verify again",
     sent: 0,
     received: 1,
+    attachments: [
+      { name: "unknown-file.bin", sizeLabel: "91 KB", status: "blocked" }
+    ],
     messages: [{ direction: "received", body: "This contact needs re-verification." }]
   }
 ];
@@ -65,7 +74,8 @@ function normalizeContact(contact) {
   return {
     ...contact,
     displayName: titleCase(contact.name),
-    messages: contact.messages || []
+    messages: contact.messages || [],
+    attachments: contact.attachments || []
   };
 }
 
@@ -89,6 +99,12 @@ function renderBridgeStatus() {
   card.textContent = apiOnline
     ? "local API connected · encrypted app store · relay remains server-blind"
     : "demo mode · start local API to use encrypted app-store data";
+}
+
+function renderAttachmentStatus(contact) {
+  const container = document.querySelector("#attachmentStatus");
+  if (!container || !window.LeftLevelAttachmentPreview) return;
+  window.LeftLevelAttachmentPreview.renderPreview(container, contact.attachments || []);
 }
 
 function renderContacts() {
@@ -133,6 +149,7 @@ async function renderContact(name) {
   document.querySelectorAll(".contact").forEach((button) => {
     button.classList.toggle("active", button.dataset.contact === name);
   });
+  renderAttachmentStatus(contact);
 
   const history = await loadHistory(contact);
   const messages = document.querySelector("#messages");
