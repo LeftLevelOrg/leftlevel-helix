@@ -14,6 +14,7 @@ from .primitives import aead_decrypt, aead_encrypt, advance_chain, hkdf, random_
 from .util import b64d, b64e, canonical_json
 
 PROTOCOL_NAME = "LLH-HELIX-v0.2"
+HEADER_MODE_SEALED = "sealed-header-v1"
 DEFAULT_SKIP_WINDOW = 64
 
 
@@ -47,6 +48,37 @@ def _unpad(padded: bytes) -> bytes:
     if size > len(padded) - 3:
         raise ValueError("invalid padding length")
     return padded[3 : 3 + size]
+
+
+def _pack_inner_message(plaintext: bytes, *, direction: str, padding_block: int) -> bytes:
+    inner = {
+        "v": PROTOCOL_NAME,
+        "type": "message",
+        "direction": direction,
+        "padding_block": padding_block,
+        "body": b64e(plaintext),
+    }
+    return _pad(canonical_json(inner), padding_block)
+
+
+def _unpack_inner_message(padded: bytes, *, expected_direction: str) -> bytes:
+    inner_bytes = _unpad(padded)
+    try:
+        inner = json.loads(inner_bytes.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError("invalid encrypted message body") from exc
+    if inner.get("v") != PROTOCOL_NAME:
+        raise ValueError("unsupported inner protocol version")
+    if inner.get("type") != "message":
+        raise ValueError("unsupported inner message type")
+    if inner.get("direction") != expected_direction:
+        raise ValueError("wrong direction for this session")
+    if inner.get("padding_block") not in (64, 128, 256, 512, 1024, 2048, 4096):
+        raise ValueError("unsupported padding block")
+    body = inner.get("body")
+    if not isinstance(body, str):
+        raise ValueError("invalid encrypted message body")
+    return b64d(body)
 
 
 @dataclass
@@ -203,14 +235,15 @@ class HelixSession:
         counter = self.send_counter + 1
         mailbox_id = self._mailbox_id(self.send_mailbox_key, counter)
         step = advance_chain(self.send_chain_key)
+        direction = "i2r" if self.role == "initiator" else "r2i"
         header = {
             "v": PROTOCOL_NAME,
             "mailbox_id": mailbox_id,
-            "padding_block": padding_block,
-            "direction": "i2r" if self.role == "initiator" else "r2i",
+            "mode": HEADER_MODE_SEALED,
         }
         aad = canonical_json(header)
-        ciphertext = aead_encrypt(step.message_key, step.nonce, _pad(plaintext, padding_block), aad)
+        packed = _pack_inner_message(plaintext, direction=direction, padding_block=padding_block)
+        ciphertext = aead_encrypt(step.message_key, step.nonce, packed, aad)
         self.send_chain_key = step.next_chain_key
         self.send_counter = counter
         return Envelope(mailbox_id=mailbox_id, header=header, ciphertext=b64e(ciphertext))
@@ -254,6 +287,8 @@ class HelixSession:
             raise ValueError("unsupported protocol version")
         if envelope.header.get("mailbox_id") != envelope.mailbox_id:
             raise ValueError("header/mailbox mismatch")
+        if envelope.header.get("mode") == HEADER_MODE_SEALED:
+            return
         expected_direction = "i2r" if self.role == "responder" else "r2i"
         if envelope.header.get("direction") != expected_direction:
             raise ValueError("wrong direction for this session")
@@ -263,6 +298,9 @@ class HelixSession:
     def _decrypt_with(self, envelope: Envelope, message_key: bytes, nonce: bytes) -> bytes:
         aad = canonical_json(envelope.header)
         padded = aead_decrypt(message_key, nonce, b64d(envelope.ciphertext), aad)
+        if envelope.header.get("mode") == HEADER_MODE_SEALED:
+            expected_direction = "i2r" if self.role == "responder" else "r2i"
+            return _unpack_inner_message(padded, expected_direction=expected_direction)
         return _unpad(padded)
 
     def _trim_replay_state(self) -> None:
@@ -325,7 +363,7 @@ def create_invite(identity: Identity) -> AliceDraft:
         "alice_x25519_pub": b64e(_x25519_pub(xpriv)),
         "alice_mlkem768_pub_pem": b64e(mlkem.public_pem()),
         "identity_model": "invite-only-pseudonymous",
-        "capabilities": ["hybrid-x25519-mlkem768", "out-of-order-window-64", "rotating-mailboxes"],
+        "capabilities": ["hybrid-x25519-mlkem768", "out-of-order-window-64", "rotating-mailboxes", "sealed-headers-v1"],
     }
     sig = identity.sign(canonical_json(body))
     invite = HelixInvite(body=body, signature=b64e(sig))
@@ -348,7 +386,7 @@ def accept_invite(identity: Identity, invite: HelixInvite) -> tuple[HelixRespons
         "bob_x25519_pub": b64e(_x25519_pub(bx)),
         "mlkem768_ciphertext": b64e(kem_ct),
         "invite_hash": b64e(sha256(canonical_json(invite.to_dict()))),
-        "capabilities": ["hybrid-x25519-mlkem768", "out-of-order-window-64", "rotating-mailboxes"],
+        "capabilities": ["hybrid-x25519-mlkem768", "out-of-order-window-64", "rotating-mailboxes", "sealed-headers-v1"],
     }
     sig = identity.sign(canonical_json(body))
     response = HelixResponse(body=body, signature=b64e(sig))
