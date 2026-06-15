@@ -1,10 +1,10 @@
-# LeftLevel Helix v0.3 Prototype
+# LeftLevel Helix v0.4 Prototype
 
 **LeftLevel Helix** is an experimental, original secure-messaging protocol prototype for the LeftLevel project: _Decentralized Privacy — Built to Stay Online_.
 
 This repository demonstrates a two-person, invite-only, server-blind encrypted conversation flow. It uses open standards and vetted primitives rather than copying an app protocol or inventing new mathematics.
 
-> Package version: v0.3.0. Current wire protocol name: `LLH-HELIX-v0.2`.
+> Package version: v0.4.0. Current wire protocol name: `LLH-HELIX-v0.2`.
 
 ## What this prototype does
 
@@ -22,15 +22,28 @@ This repository demonstrates a two-person, invite-only, server-blind encrypted c
 - Encrypted local vault files for identities, invite drafts, and session state.
 - Bounded out-of-order receive handling.
 - HTTP relay client and CLI send/receive commands.
-- Tests for handshake, encryption, replay rejection, tamper rejection, out-of-order receive handling, encrypted vault persistence, relay blindness, and HTTP relay client behavior.
+- Safety-number verification for invite/response handshakes.
+- Tests for handshake, encryption, replay rejection, tamper rejection, out-of-order receive handling, encrypted vault persistence, relay blindness, HTTP relay client behavior, and safety-number behavior.
 
 ## What this prototype does not yet do
 
 - It is **not production-ready**.
 - It has **not been independently audited**.
-- v0.3 supports two users only.
-- v0.3 does not yet include mobile apps, group MLS-style trees, mixnet routing, hardened OS keychain/keystore integration, or a production local message database.
+- v0.4 supports two users only.
+- v0.4 does not yet include mobile apps, group MLS-style trees, mixnet routing, hardened OS keychain/keystore integration, or a production local message database.
 - It cannot protect messages displayed on a fully compromised endpoint.
+
+## Man-in-the-middle posture
+
+The invite and response are signed and transcript-bound, so tampering is detected once the expected invite/response pair is used. A relay or network cannot silently change the handshake without breaking verification.
+
+However, no invite-only system can fully prevent a first-contact impersonation if users accept an invite through an untrusted channel and never compare verification codes. v0.4 adds a safety number so both users can compare the same short code out-of-band before trusting a contact.
+
+```bash
+leftlevel-verify --invite invite.llh.json --response response.llh.json
+```
+
+Both people should see the same safety number. If the numbers differ, do not trust that contact/session.
 
 ## Why this is not “stealing Signal”
 
