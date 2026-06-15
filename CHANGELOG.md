@@ -24,6 +24,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - Local API setup status endpoint.
 - Local API encrypted store create endpoint.
 - Local API test friend endpoint.
+- Local API test message endpoint.
 - Local API pairing actions for invite, accept, and finalize.
 - Pairing status contract for setup readiness.
 - App-store pairing draft storage.
@@ -31,6 +32,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - Desktop playground local setup status panel.
 - Desktop playground Open encrypted store automation.
 - Desktop playground Create test friend automation.
+- Desktop playground Send test message automation.
 - Desktop playground pairing guidance in setup panel.
 - Desktop playground guided Add friend fields.
 - Desktop playground prototype Add friend action panel.
@@ -53,7 +55,7 @@ All notable changes to LeftLevel Helix should be documented here.
 ### Known limitations
 
 - The interface is still a playground, not a packaged app.
-- Create test friend is for local development only, not real friend verification.
+- Create test friend and Send test message are for local development only, not real friend verification.
 - Add friend still uses JSON copy/paste, not polished guided screens or file import/export.
 - Safety-number comparison is not yet fully UI-driven.
 - Attachment transfer is not yet fully wired through relay-backed UI flows.
