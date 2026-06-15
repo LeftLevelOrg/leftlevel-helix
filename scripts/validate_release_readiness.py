@@ -12,6 +12,7 @@ REQUIRED_DOCS = {
     "docs/SIGNOFF_RECORD_TEMPLATE.md": ["Release candidate", "Gate status", "Evidence links", "Decision"],
     "docs/VERSIONING_POLICY.md": ["Package version", "Wire protocol name", "Changelog rule"],
     "docs/DEPENDENCY_INVENTORY.md": ["Runtime dependencies", "Production readiness requirements"],
+    "docs/RELEASE_ARTIFACT_POLICY.md": ["Signing policy", "Reproducible build plan", "SBOM plan", "Rollback policy"],
     "docs/REPOSITORY_STRATEGY.md": ["Recommended repository boundaries"],
     "docs/UI_EXTRACTION_PLAN.md": ["Extraction prerequisites"],
     "docs/LOCAL_INTERFACE_TESTING.md": ["Current status"],
