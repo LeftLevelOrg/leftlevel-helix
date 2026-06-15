@@ -29,6 +29,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - Desktop playground local setup status panel.
 - Desktop playground Open encrypted store automation.
 - Desktop playground pairing guidance in setup panel.
+- Desktop playground guided Add friend fields.
 - Desktop playground prototype Add friend action panel.
 - Desktop playground security indicator legend.
 - Desktop playground send safety guard.
@@ -42,13 +43,14 @@ All notable changes to LeftLevel Helix should be documented here.
 ### Changed
 
 - Desktop playground now uses user-facing Add friend language instead of protocol pairing language.
+- Desktop playground now uses visible Add friend fields instead of prompt dialogs for invite and response JSON.
 - Desktop playground now displays trust states, setup readiness, pairing guidance, attachment states, and local API send and receive status messages.
 - Documentation now emphasizes security first, then fast and usable messaging.
 
 ### Known limitations
 
 - The interface is still a playground, not a packaged app.
-- Pairing uses prototype prompt dialogs and JSON copy/paste, not polished guided screens.
+- Add friend still uses JSON copy/paste, not polished guided screens or file import/export.
 - Safety-number comparison is not yet fully UI-driven.
 - Attachment transfer is not yet fully wired through relay-backed UI flows.
 - Release artifacts are not yet signed.
