@@ -1,0 +1,20 @@
+[project]
+name = "leftlevel-helix"
+version = "0.2.0"
+description = "LeftLevel Helix v0.2 prototype: server-blind hybrid post-quantum E2EE messaging demo"
+requires-python = ">=3.11"
+dependencies = [
+  "cryptography>=41",
+  "fastapi>=0.100",
+  "uvicorn>=0.20",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[project.scripts]
+leftlevel-helix = "leftlevel_helix.cli:main"
