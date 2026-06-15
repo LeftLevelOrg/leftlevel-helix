@@ -4,9 +4,9 @@ This guide explains how to view the current LeftLevel desktop playground and how
 
 ## Current status
 
-The interface is now more than a static mockup, but it is still a playground. It can show contacts, trust states, message history, local setup status, composer behavior, attachment queue states, and attachment integrity states.
+The interface is now more than a static mockup, but it is still a playground. It can show contacts, trust states, message history, local setup status, pairing actions, composer behavior, attachment queue states, and attachment integrity states.
 
-The interface can call the local API for setup readiness, message send, and message receive when a local app store, local API, and test relay are running.
+The interface can call the local API for setup readiness, prototype pairing actions, message send, and message receive when a local app store, local API, and test relay are running.
 
 It is not yet a packaged desktop app and should not be used for sensitive real-world messages.
 
@@ -73,6 +73,16 @@ Expected behavior when the app store already contains contacts:
 - Receive uses the local API message endpoint;
 - the relay still handles encrypted envelopes only.
 
+## Prototype pairing panel
+
+The pairing panel can call local API prototype actions:
+
+- Create invite: creates a local invite and pending encrypted draft, then prints JSON for copy/paste testing;
+- Accept invite: asks for a local contact name and pasted invite JSON, then saves a contact and prints response JSON;
+- Finalize response: asks for a draft ID, local contact name, and pasted response JSON, then saves the paired contact.
+
+This is a prototype copy/paste flow. A future interface should replace prompts with guided screens and file import/export.
+
 ## Setup states
 
 The local setup panel may show:
@@ -84,20 +94,20 @@ The local setup panel may show:
 
 ## Important setup note
 
-The local API requires an existing encrypted app store with contacts and sessions. Creating that store is currently a CLI workflow. A future interface milestone should add UI-based pairing and contact setup.
+The local API requires an existing encrypted app store. Contact setup can now be exercised through prototype pairing actions, but creating the initial encrypted store is still outside the polished UI.
 
 ## Friend testing readiness
 
 Do not ask a non-developer friend to test the full workflow yet. The interface still needs:
 
 - UI-based encrypted store creation;
-- UI-based pairing;
+- guided pairing screens instead of prompt dialogs;
 - UI-based safety-number comparison;
 - clearer setup guidance;
 - packaged app startup;
 - real attachment transfer through the UI.
 
-For now, friend testing should wait until the setup is simpler and the interface can create or import the needed local state without CLI steps.
+For now, friend testing should wait until the setup is simpler and the interface can create or import the needed local state without manual JSON copy/paste.
 
 ## Security guidance
 
