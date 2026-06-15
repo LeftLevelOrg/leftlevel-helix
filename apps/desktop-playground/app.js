@@ -222,6 +222,19 @@ async function refreshActiveContact() {
   if (activeContact) await renderContact(activeContact);
 }
 
+function canSendToActiveContact() {
+  const contact = contacts.find((item) => item.name === activeContact);
+  if (!contact) return false;
+  if (contact.trust_state === "changed") {
+    renderBridgeStatus("sending stopped · red means stop and check this friend first");
+    return false;
+  }
+  if (contact.trust_state !== "verified") {
+    return confirm(`This friend is not verified yet.\n\nYellow means review first. Send this test message anyway?`);
+  }
+  return true;
+}
+
 document.querySelector("#verifyButton").addEventListener("click", async () => {
   if (!activeContact) return;
   const contact = contacts.find((item) => item.name === activeContact);
@@ -320,6 +333,7 @@ document.querySelector("#sendButton").addEventListener("click", async () => {
   const input = document.querySelector("#messageInput");
   const body = input.value.trim();
   if (!body || !activeContact) return;
+  if (!canSendToActiveContact()) return;
 
   if (apiOnline) {
     try {
