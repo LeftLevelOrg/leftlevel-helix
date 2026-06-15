@@ -63,6 +63,8 @@ def test_local_api_setup_status_ready(tmp_path):
     assert status["store_exists"] is True
     assert status["contact_count"] == 1
     assert status["ready_for_interface_test"] is True
+    assert status["pairing"]["state"] == "paired_contacts_available"
+    assert status["pairing"]["blocks_friend_testing"] is False
 
 
 def test_local_api_setup_status_missing_store(tmp_path):
@@ -75,6 +77,8 @@ def test_local_api_setup_status_missing_store(tmp_path):
     assert status["store_exists"] is False
     assert status["contact_count"] == 0
     assert status["ready_for_interface_test"] is False
+    assert status["pairing"]["state"] == "needs_pairing"
+    assert status["pairing"]["blocks_friend_testing"] is True
 
 
 def test_local_api_service_send_records_history(tmp_path, monkeypatch):
