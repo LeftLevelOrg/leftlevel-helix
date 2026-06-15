@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# LeftLevel local secrets and generated artifacts
+*.vault
+*.llh.vault
+*.llh.json
+identity*.json
+invite*.json
+response*.json
+envelope*.json
+alice-*.vault
+bob-*.vault
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/
