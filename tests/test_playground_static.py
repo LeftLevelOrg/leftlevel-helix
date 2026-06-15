@@ -29,7 +29,8 @@ def test_playground_loads_helpers_before_app():
     markup = (PLAYGROUND / "index.html").read_text(encoding="utf-8")
     assert '<script src="api.js"></script>' in markup
     assert '<script src="composer.js"></script>' in markup
-    assert markup.index('src="api.js"') < markup.index('src="composer.js"') < markup.index('src="app.js"')
+    assert '<script src="attachment-preview.js"></script>' in markup
+    assert markup.index('src="api.js"') < markup.index('src="composer.js"') < markup.index('src="attachment-preview.js"') < markup.index('src="app.js"')
 
 
 def test_playground_renders_trust_states():
@@ -76,6 +77,21 @@ def test_playground_has_v07_composer_shell():
     assert ".attachment-pill" in styles
     assert "Unicode ready" in composer
     assert "attachment-pill" in composer
+
+
+def test_playground_has_attachment_integrity_panel():
+    markup = (PLAYGROUND / "index.html").read_text(encoding="utf-8")
+    styles = (PLAYGROUND / "styles.css").read_text(encoding="utf-8")
+    script = (PLAYGROUND / "app.js").read_text(encoding="utf-8")
+    assert "Attachment integrity" in markup
+    assert 'id="attachmentStatus"' in markup
+    assert ".attachment-pill.verified" in styles
+    assert ".attachment-pill.warning" in styles
+    assert ".attachment-pill.blocked" in styles
+    assert "renderAttachmentStatus" in script
+    assert "status: \"verified\"" in script
+    assert "status: \"warning\"" in script
+    assert "status: \"blocked\"" in script
 
 
 def test_playground_has_attachment_preview_helper():
