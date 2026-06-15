@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 
 from leftlevel_helix.attachments import EncryptedAttachment, decrypt_attachment, encrypt_attachment
+from leftlevel_helix.util import b64d, b64e
 
 
 def test_attachment_roundtrip_small_text():
@@ -37,7 +38,9 @@ def test_attachment_roundtrip_dict_shape():
 def test_attachment_detects_ciphertext_tamper():
     attachment = encrypt_attachment("file.bin", b"payload")
     data = attachment.to_dict()
-    data["chunks"][0]["ciphertext"] = data["chunks"][0]["ciphertext"][:-1] + "A"
+    ciphertext = bytearray(b64d(data["chunks"][0]["ciphertext"]))
+    ciphertext[0] ^= 1
+    data["chunks"][0]["ciphertext"] = b64e(bytes(ciphertext))
     tampered = EncryptedAttachment.from_dict(data)
 
     with pytest.raises(ValueError, match="checksum"):
