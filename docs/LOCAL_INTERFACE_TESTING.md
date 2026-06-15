@@ -4,9 +4,9 @@ This guide explains how to view the current LeftLevel desktop playground and how
 
 ## Current status
 
-The interface is now more than a static mockup, but it is still a playground. It can show contacts, trust states, message history, local setup status, pairing actions, composer behavior, attachment queue states, and attachment integrity states.
+The interface is now more than a static mockup, but it is still a playground. It can show contacts, trust states, message history, local setup status, Add friend actions, composer behavior, attachment queue states, and attachment integrity states.
 
-The interface can call the local API for setup readiness, prototype pairing actions, message send, and message receive when a local app store, local API, and test relay are running.
+The interface can call the local API for encrypted store creation, setup readiness, prototype Add friend actions, message send, and message receive when the local API and test relay are running.
 
 It is not yet a packaged desktop app and should not be used for sensitive real-world messages.
 
@@ -64,22 +64,35 @@ Then open:
 http://127.0.0.1:5173
 ```
 
-Expected behavior when the app store already contains contacts:
+Expected behavior:
 
-- the playground reads contacts from the local API;
+- the playground detects the local API;
+- Open encrypted store creates the configured local vault if it is missing;
 - the local setup panel shows store readiness and contact count;
-- message history comes from the encrypted local app store;
+- message history comes from the encrypted local app store after contacts exist;
 - Send uses the local API message endpoint;
 - Receive uses the local API message endpoint;
 - the relay still handles encrypted envelopes only.
 
-## Prototype pairing panel
+## Open encrypted store
 
-The pairing panel can call local API prototype actions:
+The Open encrypted store button calls the local API setup create endpoint.
 
-- Create invite: creates a local invite and pending encrypted draft, then prints JSON for copy/paste testing;
-- Accept invite: asks for a local contact name and pasted invite JSON, then saves a contact and prints response JSON;
-- Finalize response: asks for a draft ID, local contact name, and pasted response JSON, then saves the paired contact.
+The browser does not receive the vault passphrase. The local API uses the configured `LLH_VAULT_PASSPHRASE` and `LLH_APP_STORE` values.
+
+Expected statuses:
+
+- `created`: the encrypted store was created;
+- `already_exists`: the encrypted store already exists;
+- failure message: the local API could not create or open the configured store.
+
+## Prototype Add friend panel
+
+The Add friend panel can call local API prototype actions:
+
+- Create friend invite: creates a local invite and pending encrypted draft, then prints JSON for copy/paste testing;
+- Accept friend invite: asks for a local contact name and pasted invite JSON, then saves a contact and prints response JSON;
+- Finish adding friend: asks for a draft ID, local contact name, and pasted response JSON, then saves the paired contact.
 
 This is a prototype copy/paste flow. A future interface should replace prompts with guided screens and file import/export.
 
@@ -94,14 +107,13 @@ The local setup panel may show:
 
 ## Important setup note
 
-The local API requires an existing encrypted app store. Contact setup can now be exercised through prototype pairing actions, but creating the initial encrypted store is still outside the polished UI.
+The local API can now create the configured encrypted app store. Contact setup can be exercised through prototype Add friend actions, but the UI still needs a guided, polished setup flow before non-developer friend testing.
 
 ## Friend testing readiness
 
 Do not ask a non-developer friend to test the full workflow yet. The interface still needs:
 
-- UI-based encrypted store creation;
-- guided pairing screens instead of prompt dialogs;
+- guided Add friend screens instead of prompt dialogs;
 - UI-based safety-number comparison;
 - clearer setup guidance;
 - packaged app startup;
