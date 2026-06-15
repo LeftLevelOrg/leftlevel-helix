@@ -224,8 +224,16 @@ async function refreshActiveContact() {
 
 document.querySelector("#verifyButton").addEventListener("click", async () => {
   if (!activeContact) return;
+  const contact = contacts.find((item) => item.name === activeContact);
+  const contactLabel = contact?.displayName || activeContact;
+  const safety = contact?.safety_short_code || "not available";
+  const confirmed = confirm(`Verify ${contactLabel}?\n\nOnly continue if you compared this safety number with your friend:\n${safety}`);
+  if (!confirmed) {
+    renderBridgeStatus("verification cancelled · compare safety numbers first");
+    return;
+  }
+
   if (!apiOnline) {
-    const contact = contacts.find((item) => item.name === activeContact);
     if (contact) contact.trust_state = "verified";
     renderBridgeStatus("demo mode · friend marked verified for preview only");
     await renderContact(activeContact);
