@@ -94,8 +94,12 @@ async function loadContacts() {
   renderBridgeStatus();
 }
 
-function renderBridgeStatus() {
+function renderBridgeStatus(message) {
   const card = document.querySelector(".status-card span");
+  if (message) {
+    card.textContent = message;
+    return;
+  }
   card.textContent = apiOnline
     ? "local API connected · encrypted app store · relay remains server-blind"
     : "demo mode · start local API to use encrypted app-store data";
@@ -132,7 +136,7 @@ function renderContacts() {
 async function loadHistory(contact) {
   if (!apiOnline) return contact.messages || [];
   try {
-    return await apiFetch(`/contacts/${encodeURIComponent(contact.name)}/history`);
+    return await LeftLevelApi.history(contact.name);
   } catch (_error) {
     return [];
   }
@@ -169,13 +173,40 @@ async function renderContact(name) {
   });
 }
 
+async function refreshActiveContact() {
+  await loadContacts();
+  if (activeContact) await renderContact(activeContact);
+}
+
+document.querySelector("#receiveButton").addEventListener("click", async () => {
+  if (!activeContact) return;
+  if (!apiOnline) {
+    renderBridgeStatus("demo mode · receive requires the local API and test relay");
+    return;
+  }
+  try {
+    const result = await LeftLevelApi.receive(activeContact);
+    renderBridgeStatus(result.status === "received" ? "received encrypted message through local API" : "no message available");
+    await renderContact(activeContact);
+  } catch (error) {
+    renderBridgeStatus(`receive failed · ${error.message}`);
+  }
+});
+
 document.querySelector("#sendButton").addEventListener("click", async () => {
   const input = document.querySelector("#messageInput");
   const body = input.value.trim();
   if (!body || !activeContact) return;
 
   if (apiOnline) {
-    alert("Send through local API is intentionally not wired yet. Next step: add relay-backed send/receive endpoints.");
+    try {
+      await LeftLevelApi.send(activeContact, body);
+      input.value = "";
+      renderBridgeStatus("sent encrypted message through local API");
+      await renderContact(activeContact);
+    } catch (error) {
+      renderBridgeStatus(`send failed · ${error.message}`);
+    }
     return;
   }
 
