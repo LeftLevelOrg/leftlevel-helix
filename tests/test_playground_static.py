@@ -62,6 +62,10 @@ def test_playground_helper_exposes_contact_actions():
     assert "history:" in helper
     assert "verify:" in helper
     assert "rename:" in helper
+    assert "send:" in helper
+    assert "receive:" in helper
+    assert "/send" in helper
+    assert "/receive" in helper
 
 
 def test_playground_has_v07_composer_shell():
@@ -106,6 +110,10 @@ def test_playground_has_attachment_preview_helper():
     assert "request a resend" in preview
 
 
-def test_playground_send_button_is_not_wired_to_network_yet():
+def test_playground_send_receive_buttons_call_local_api():
     script = (PLAYGROUND / "app.js").read_text(encoding="utf-8")
-    assert "Send through local API is intentionally not wired yet" in script
+    assert "LeftLevelApi.send" in script
+    assert "LeftLevelApi.receive" in script
+    assert "sent encrypted message through local API" in script
+    assert "received encrypted message through local API" in script
+    assert "receive requires the local API and test relay" in script
