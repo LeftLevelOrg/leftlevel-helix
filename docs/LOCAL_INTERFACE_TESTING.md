@@ -4,9 +4,9 @@ This guide explains how to view the current LeftLevel desktop playground and how
 
 ## Current status
 
-The interface is now more than a static mockup, but it is still a playground. It can show contacts, trust states, message history, composer behavior, attachment queue states, and attachment integrity states.
+The interface is now more than a static mockup, but it is still a playground. It can show contacts, trust states, message history, local setup status, composer behavior, attachment queue states, and attachment integrity states.
 
-The interface can call the local API for message send and receive when a local app store, local API, and test relay are running.
+The interface can call the local API for setup readiness, message send, and message receive when a local app store, local API, and test relay are running.
 
 It is not yet a packaged desktop app and should not be used for sensitive real-world messages.
 
@@ -27,6 +27,7 @@ http://127.0.0.1:5173
 Expected behavior:
 
 - the UI opens in demo mode;
+- the local setup panel shows that the local API is not connected;
 - the contact list appears;
 - trust states are visible;
 - attachment integrity states are visible;
@@ -66,10 +67,20 @@ http://127.0.0.1:5173
 Expected behavior when the app store already contains contacts:
 
 - the playground reads contacts from the local API;
+- the local setup panel shows store readiness and contact count;
 - message history comes from the encrypted local app store;
 - Send uses the local API message endpoint;
 - Receive uses the local API message endpoint;
 - the relay still handles encrypted envelopes only.
+
+## Setup states
+
+The local setup panel may show:
+
+- `ready`: encrypted store exists and at least one contact is available;
+- `empty_store`: encrypted store exists but no contacts are available;
+- `missing_store`: the local API is running but the configured store file is missing;
+- demo mode: the local API is not connected.
 
 ## Important setup note
 
