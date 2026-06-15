@@ -121,7 +121,7 @@ async function loadSetupStatus() {
   }
 }
 
-async function loadContacts() {
+async function loadContacts(preferredContact = activeContact) {
   try {
     const remoteContacts = await apiFetch("/contacts");
     apiOnline = true;
@@ -130,7 +130,8 @@ async function loadContacts() {
     apiOnline = false;
     contacts = fallbackContacts;
   }
-  activeContact = contacts[0]?.name || null;
+  const preferredExists = contacts.some((contact) => contact.name === preferredContact);
+  activeContact = preferredExists ? preferredContact : contacts[0]?.name || null;
   renderContacts();
   if (activeContact) await renderContact(activeContact);
   renderBridgeStatus();
@@ -217,9 +218,28 @@ async function renderContact(name) {
 }
 
 async function refreshActiveContact() {
-  await loadContacts();
+  await loadContacts(activeContact);
   if (activeContact) await renderContact(activeContact);
 }
+
+document.querySelector("#verifyButton").addEventListener("click", async () => {
+  if (!activeContact) return;
+  if (!apiOnline) {
+    const contact = contacts.find((item) => item.name === activeContact);
+    if (contact) contact.trust_state = "verified";
+    renderBridgeStatus("demo mode · friend marked verified for preview only");
+    await renderContact(activeContact);
+    renderContacts();
+    return;
+  }
+  try {
+    await LeftLevelApi.verify(activeContact);
+    renderBridgeStatus("friend marked verified · green means verified");
+    await refreshActiveContact();
+  } catch (error) {
+    renderBridgeStatus(`verify failed · ${error.message}`);
+  }
+});
 
 document.querySelector("#createInviteButton").addEventListener("click", async () => {
   if (!apiOnline) {
