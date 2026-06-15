@@ -1,7 +1,7 @@
 [project]
 name = "leftlevel-helix"
-version = "0.5.0"
-description = "LeftLevel Helix v0.5 prototype with encrypted local app store"
+version = "0.6.0"
+description = "LeftLevel Helix v0.6 prototype with sealed message metadata"
 requires-python = ">=3.11"
 dependencies = [
   "cryptography>=41",
