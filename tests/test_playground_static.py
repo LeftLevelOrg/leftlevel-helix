@@ -183,6 +183,10 @@ def test_playground_has_attachment_preview_helper():
 
 def test_playground_send_receive_buttons_call_local_api():
     script = (PLAYGROUND / "app.js").read_text(encoding="utf-8")
+    assert "canSendToActiveContact" in script
+    assert "red means stop and check" in script
+    assert "Yellow means review first" in script
+    assert "Send this test message anyway" in script
     assert "LeftLevelApi.send" in script
     assert "LeftLevelApi.receive" in script
     assert "sent encrypted message through local API" in script
