@@ -9,16 +9,24 @@ def test_playground_files_exist():
     assert (PLAYGROUND / "index.html").exists()
     assert (PLAYGROUND / "styles.css").exists()
     assert (PLAYGROUND / "app.js").exists()
+    assert (PLAYGROUND / "api.js").exists()
 
 
 def test_playground_uses_local_api_with_demo_fallback():
+    helper = (PLAYGROUND / "api.js").read_text(encoding="utf-8")
     script = (PLAYGROUND / "app.js").read_text(encoding="utf-8")
-    assert "http://127.0.0.1:8790" in script
+    assert "http://127.0.0.1:8790" in helper
     assert "fallbackContacts" in script
-    assert "/contacts" in script
-    assert "/history" in script
+    assert "/contacts" in helper
+    assert "/history" in helper
     assert "demo mode" in script
     assert "local API connected" in script
+
+
+def test_playground_loads_api_helper_before_app():
+    markup = (PLAYGROUND / "index.html").read_text(encoding="utf-8")
+    assert '<script src="api.js"></script>' in markup
+    assert markup.index('src="api.js"') < markup.index('src="app.js"')
 
 
 def test_playground_renders_trust_states():
@@ -42,6 +50,14 @@ def test_playground_action_buttons_are_addressable():
     assert 'id="renameButton"' in markup
     assert 'id="receiveButton"' in markup
     assert 'id="sendButton"' in markup
+
+
+def test_playground_helper_exposes_contact_actions():
+    helper = (PLAYGROUND / "api.js").read_text(encoding="utf-8")
+    assert "contacts:" in helper
+    assert "history:" in helper
+    assert "verify:" in helper
+    assert "rename:" in helper
 
 
 def test_playground_send_button_is_not_wired_to_network_yet():
