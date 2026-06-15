@@ -1,3 +1,3 @@
-"""LeftLevel Helix experimental secure messaging prototype."""
+"""LeftLevel Helix prototype package."""
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
