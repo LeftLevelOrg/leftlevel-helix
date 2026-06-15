@@ -18,6 +18,11 @@ def new_store_state() -> dict[str, Any]:
     return {"v": APP_STORE_VERSION, "contacts": {}, "messages": []}
 
 
+def _validate_contact_name(name: str) -> None:
+    if not name or any(ch.isspace() for ch in name):
+        raise ValueError("contact name must be non-empty and contain no spaces")
+
+
 @dataclass
 class ContactView:
     name: str
@@ -58,8 +63,9 @@ class AppStore:
         save_vault(self.path, self.state, self.passphrase)
 
     def add_contact(self, name: str, session: HelixSession, *, verified: bool = False) -> None:
-        if not name or any(ch.isspace() for ch in name):
-            raise ValueError("contact name must be non-empty and contain no spaces")
+        _validate_contact_name(name)
+        if name in self.state["contacts"]:
+            raise ValueError(f"contact already exists: {name}")
         safety = session.safety_number()
         self.state["contacts"][name] = {
             "session": session.to_state_dict(),
@@ -71,6 +77,28 @@ class AppStore:
             "created_at": utc_now(),
             "updated_at": utc_now(),
         }
+        self.save()
+
+    def rename_contact(self, old_name: str, new_name: str) -> None:
+        """Rename a local contact without changing cryptographic identity.
+
+        A contact name is only a local label. Renaming preserves the session,
+        trust state, safety number, peer fingerprint, ratchet counters, and local
+        message history. Only the local display name changes.
+        """
+
+        _validate_contact_name(new_name)
+        if old_name == new_name:
+            return
+        if new_name in self.state["contacts"]:
+            raise ValueError(f"contact already exists: {new_name}")
+        contact = self._contact(old_name)
+        self.state["contacts"][new_name] = contact
+        del self.state["contacts"][old_name]
+        contact["updated_at"] = utc_now()
+        for message in self.state["messages"]:
+            if message["contact"] == old_name:
+                message["contact"] = new_name
         self.save()
 
     def set_trust_state(self, name: str, trust_state: str) -> None:
@@ -97,6 +125,7 @@ class AppStore:
         self.save()
 
     def record_message(self, contact_name: str, direction: str, body: str, *, mailbox_id: str | None = None) -> None:
+        self._contact(contact_name)
         if direction not in {"sent", "received"}:
             raise ValueError("direction must be sent or received")
         self.state["messages"].append(
