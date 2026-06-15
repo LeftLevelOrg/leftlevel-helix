@@ -58,14 +58,27 @@ def test_playground_action_buttons_are_addressable():
 
 def test_playground_helper_exposes_contact_actions():
     helper = (PLAYGROUND / "api.js").read_text(encoding="utf-8")
+    assert "setupStatus:" in helper
     assert "contacts:" in helper
     assert "history:" in helper
     assert "verify:" in helper
     assert "rename:" in helper
     assert "send:" in helper
     assert "receive:" in helper
+    assert "/setup/status" in helper
     assert "/send" in helper
     assert "/receive" in helper
+
+
+def test_playground_has_local_setup_panel():
+    markup = (PLAYGROUND / "index.html").read_text(encoding="utf-8")
+    script = (PLAYGROUND / "app.js").read_text(encoding="utf-8")
+    assert "Local setup" in markup
+    assert 'id="setupStatus"' in markup
+    assert "loadSetupStatus" in script
+    assert "ready_for_interface_test" in script
+    assert "encrypted store connected" in script
+    assert "local API not connected" in script
 
 
 def test_playground_has_v07_composer_shell():
