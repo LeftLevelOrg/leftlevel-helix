@@ -8,6 +8,7 @@ When implemented and run correctly:
 - A stolen relay database does not contain plaintext messages.
 - Tampering with ciphertext or authenticated headers is detected.
 - Replay of an already-consumed envelope is rejected.
+- Out-of-order delivery works within a bounded skipped-message-key window.
 - Session establishment uses both classical X25519 and post-quantum ML-KEM-768 material.
 - Message keys are single-use and deleted by ratcheting state forward.
 
@@ -32,7 +33,6 @@ When implemented and run correctly:
 | Screenshots or camera pointed at screen | Cannot be cryptographically prevented. |
 | Global traffic analysis | Needs mix routing, cover traffic, or onion routing. |
 | Large group compromise recovery | Future group protocol needed. |
-| Out-of-order message delivery | Future skipped-key cache needed. |
 | Metadata-free relay operation | v0.2 minimizes metadata but does not eliminate timing/IP metadata. |
 
 ## No-logs relay posture
