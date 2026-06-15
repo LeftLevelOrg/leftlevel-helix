@@ -4,7 +4,7 @@ This document describes the first attachment foundation for LeftLevel Helix.
 
 ## Status
 
-The current implementation is a prototype attachment package model. It supports local encryption, decryption, references, encrypted local storage, and opaque transfer packages for tests and future integration work.
+The current implementation is a prototype attachment package model. It supports local encryption, decryption, references, encrypted local storage, opaque transfer packages, and integrity reports for tests and future integration work.
 
 It is not yet wired into relay-backed send and receive flows.
 
@@ -96,6 +96,24 @@ A transfer package exposes only:
 
 It intentionally omits file name, media type, plaintext digest, and attachment key. Those fields remain in local storage or inside sealed message payloads.
 
+## Integrity reports
+
+The `IntegrityReport` type gives the app a UI-ready result for attachment verification.
+
+Possible statuses are:
+
+- `verified`: integrity checks passed and opening may be allowed;
+- `warning`: metadata exposure or another condition requires user review;
+- `blocked`: opening should be blocked because verification failed.
+
+Recommended mitigation options include:
+
+- block opening the attachment;
+- delete the local attachment package;
+- request a resend;
+- review the contact safety number;
+- show a verified indicator when checks pass.
+
 ## Security boundary
 
 The manifest and reference currently contain fields such as file name and media type. Those fields must be carried inside an encrypted message payload before use with a relay.
@@ -113,9 +131,10 @@ Long text bodies should remain message content when practical. Very large text, 
 The next implementation steps are:
 
 1. Add a relay endpoint for opaque attachment chunks.
-2. Add UI preview states for queued and received attachments.
-3. Wire the desktop playground to send and receive attachment references after tests exist.
-4. Add upload, download, retry, and progress states.
+2. Wire integrity reports into local API responses.
+3. Add UI preview states for queued and received attachments.
+4. Wire the desktop playground to send and receive attachment references after tests exist.
+5. Add upload, download, retry, and progress states.
 
 ## Limitations
 
