@@ -98,7 +98,7 @@ function setupStatusText(status) {
     return `ready · encrypted store connected · ${status.contact_count} contact(s)${pairingHint}`;
   }
   if (status.status === "empty_store") {
-    return `encrypted store connected · add or pair a contact before testing${pairingHint}`;
+    return `encrypted store connected · add a friend before testing${pairingHint}`;
   }
   if (status.status === "missing_store") {
     return `local API connected · encrypted store file is missing${pairingHint}`;
@@ -123,9 +123,14 @@ async function loadSetupStatus() {
 
 async function loadContacts(preferredContact = activeContact) {
   try {
-    const remoteContacts = await apiFetch("/contacts");
+    await LeftLevelApi.health();
     apiOnline = true;
-    contacts = remoteContacts.map(normalizeContact);
+    try {
+      const remoteContacts = await LeftLevelApi.contacts();
+      contacts = remoteContacts.map(normalizeContact);
+    } catch (_contactsError) {
+      contacts = [];
+    }
   } catch (_error) {
     apiOnline = false;
     contacts = fallbackContacts;
@@ -158,6 +163,13 @@ function renderAttachmentStatus(contact) {
 function renderContacts() {
   const panel = document.querySelector(".panel");
   panel.querySelectorAll(".contact").forEach((node) => node.remove());
+  if (contacts.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "empty-contact-list";
+    empty.textContent = apiOnline ? "No friends yet. Open encrypted store, then add a friend." : "Demo contacts unavailable.";
+    panel.appendChild(empty);
+    return;
+  }
   contacts.forEach((contact) => {
     const button = document.createElement("button");
     button.className = `contact ${contact.name === activeContact ? "active" : ""}`;
@@ -234,6 +246,21 @@ function canSendToActiveContact() {
   }
   return true;
 }
+
+document.querySelector("#openStoreButton").addEventListener("click", async () => {
+  if (!apiOnline) {
+    renderBridgeStatus("start the local API before opening the encrypted store");
+    await loadSetupStatus();
+    return;
+  }
+  try {
+    const result = await LeftLevelApi.createStore();
+    renderBridgeStatus(result.status === "created" ? "encrypted store created · add a friend next" : "encrypted store already exists · add a friend next");
+    await loadContacts(activeContact);
+  } catch (error) {
+    renderBridgeStatus(`open encrypted store failed · ${error.message}`);
+  }
+});
 
 document.querySelector("#verifyButton").addEventListener("click", async () => {
   if (!activeContact) return;
