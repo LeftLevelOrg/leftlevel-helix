@@ -13,6 +13,7 @@ REQUIRED_DOCS = {
     "docs/VERSIONING_POLICY.md": ["Package version", "Wire protocol name", "Changelog rule"],
     "docs/DEPENDENCY_INVENTORY.md": ["Runtime dependencies", "Production readiness requirements"],
     "docs/RELEASE_ARTIFACT_POLICY.md": ["Signing policy", "Reproducible build plan", "SBOM plan", "Rollback policy"],
+    "docs/RELEASE_CHECKLIST.md": ["Prepare release candidate", "Build artifacts", "Sign-off"],
     "docs/CI_POLICY.md": ["Portable test suite", "Readiness documentation validation", "Production readiness boundary"],
     "docs/REPOSITORY_STRATEGY.md": ["Recommended repository boundaries"],
     "docs/UI_EXTRACTION_PLAN.md": ["Extraction prerequisites"],
