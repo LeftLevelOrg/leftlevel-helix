@@ -92,6 +92,29 @@ def test_pairing_actions_create_contacts_on_both_sides(tmp_path):
     assert alice_store.contact_views()[0].safety_short_code == bob_store.contact_views()[0].safety_short_code
 
 
+def test_create_test_friend_pair_adds_verified_loopback_contacts(tmp_path):
+    store = AppStore.create(str(tmp_path / "store.llh.vault"), "correct horse battery")
+
+    result = store.create_test_friend_pair(base_name="demo-friend")
+
+    views = {view.name: view for view in store.contact_views()}
+    assert result["status"] == "created"
+    assert result["friend"] == "demo-friend"
+    assert result["friend_peer"] == "demo-friend-peer"
+    assert set(views) == {"demo-friend", "demo-friend-peer"}
+    assert views["demo-friend"].trust_state == "verified"
+    assert views["demo-friend-peer"].trust_state == "verified"
+    assert views["demo-friend"].safety_short_code == views["demo-friend-peer"].safety_short_code
+
+
+def test_create_test_friend_pair_rejects_existing_pair(tmp_path):
+    store = AppStore.create(str(tmp_path / "store.llh.vault"), "correct horse battery")
+    store.create_test_friend_pair(base_name="demo-friend")
+
+    with pytest.raises(ValueError, match="test friend already exists"):
+        store.create_test_friend_pair(base_name="demo-friend")
+
+
 def test_pairing_finalize_rejects_unknown_draft(tmp_path):
     store = AppStore.create(str(tmp_path / "store.llh.vault"), "correct horse battery")
     with pytest.raises(ValueError, match="unknown pairing draft"):
