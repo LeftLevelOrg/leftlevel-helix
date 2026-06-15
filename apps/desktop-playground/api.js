@@ -18,6 +18,7 @@ const LeftLevelApi = (() => {
     baseUrl,
     defaultRelayUrl,
     health: () => request("/health"),
+    setupStatus: () => request("/setup/status"),
     contacts: () => request("/contacts"),
     history: (name) => request(`/contacts/${encodeURIComponent(name)}/history`),
     verify: (name) => request(`/contacts/${encodeURIComponent(name)}/verify`, { method: "POST" }),
