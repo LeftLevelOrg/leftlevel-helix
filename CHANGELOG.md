@@ -22,10 +22,12 @@ All notable changes to LeftLevel Helix should be documented here.
 - Release readiness gates and sign-off template.
 - Local interface testing guide.
 - Local API setup status endpoint.
+- Local API encrypted store create endpoint.
 - Local API pairing actions for invite, accept, and finalize.
 - Pairing status contract for setup readiness.
 - App-store pairing draft storage.
 - Desktop playground local setup status panel.
+- Desktop playground Open encrypted store automation.
 - Desktop playground pairing guidance in setup panel.
 - Desktop playground prototype Add friend action panel.
 - Desktop playground security indicator legend.
