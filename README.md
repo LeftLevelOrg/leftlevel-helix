@@ -1,10 +1,23 @@
-# LeftLevel Helix v0.4 Prototype
+# LeftLevel Helix v0.5 Prototype
 
 **LeftLevel Helix** is an experimental, original secure-messaging protocol prototype for the LeftLevel project: _Decentralized Privacy — Built to Stay Online_.
 
 This repository demonstrates a two-person, invite-only, server-blind encrypted conversation flow. It uses open standards and vetted primitives rather than copying an app protocol or inventing new mathematics.
 
-> Package version: v0.4.0. Current wire protocol name: `LLH-HELIX-v0.2`.
+> Package version: v0.5.0. Current wire protocol name: `LLH-HELIX-v0.2`.
+
+## Current product focus
+
+The near-term goal is simple: get a working product experience before adding Discord, Slack, browser, or mobile-share integrations.
+
+v0.5 focuses on:
+
+- pairing two people;
+- verifying the contact;
+- sending encrypted messages through a blind relay;
+- receiving encrypted messages;
+- keeping encrypted local contact and message history;
+- showing clear trust labels.
 
 ## What this prototype does
 
@@ -20,30 +33,47 @@ This repository demonstrates a two-person, invite-only, server-blind encrypted c
 - Blind relay that stores only encrypted envelopes by mailbox ID.
 - Fixed-block message padding for small messages.
 - Encrypted local vault files for identities, invite drafts, and session state.
+- Encrypted local app store for contacts, trust labels, sessions, and message history.
 - Bounded out-of-order receive handling.
 - HTTP relay client and CLI send/receive commands.
 - Safety-number verification for invite/response handshakes.
-- Tests for handshake, encryption, replay rejection, tamper rejection, out-of-order receive handling, encrypted vault persistence, relay blindness, HTTP relay client behavior, and safety-number behavior.
+- Tests for handshake, encryption, replay rejection, tamper rejection, out-of-order receive handling, encrypted vault persistence, relay blindness, HTTP relay client behavior, safety-number behavior, and local app-store messaging flow.
 
 ## What this prototype does not yet do
 
 - It is **not production-ready**.
 - It has **not been independently audited**.
-- v0.4 supports two users only.
-- v0.4 does not yet include mobile apps, group MLS-style trees, mixnet routing, hardened OS keychain/keystore integration, or a production local message database.
+- v0.5 supports two users only.
+- v0.5 does not yet include mobile apps, group MLS-style trees, mixnet routing, hardened OS keychain/keystore integration, or a production database.
 - It cannot protect messages displayed on a fully compromised endpoint.
 
 ## Man-in-the-middle posture
 
 The invite and response are signed and transcript-bound, so tampering is detected once the expected invite/response pair is used. A relay or network cannot silently change the handshake without breaking verification.
 
-However, no invite-only system can fully prevent a first-contact impersonation if users accept an invite through an untrusted channel and never compare verification codes. v0.4 adds a safety number so both users can compare the same short code out-of-band before trusting a contact.
+However, no invite-only system can fully prevent a first-contact impersonation if users accept an invite through an untrusted channel and never compare verification codes. Safety-number verification lets both users compare the same short code out-of-band before trusting a contact.
 
 ```bash
 leftlevel-verify --invite invite.llh.json --response response.llh.json
 ```
 
 Both people should see the same safety number. If the numbers differ, do not trust that contact/session.
+
+## Minimal local app workflow
+
+The `leftlevel-app` command gives the prototype a simple product-shaped workflow with contacts, trust labels, and local message history stored inside an encrypted app vault.
+
+```bash
+leftlevel-app init
+leftlevel-app add-contact bob --session alice-session.llh.vault
+leftlevel-app contacts
+leftlevel-app verify-contact bob
+leftlevel-app send bob "hello" --relay-url http://127.0.0.1:8787
+leftlevel-app receive bob --relay-url http://127.0.0.1:8787
+leftlevel-app history bob
+```
+
+This is the recommended product path before adding Discord, Slack, browser, or mobile-share integrations.
 
 ## Why this is not “stealing Signal”
 
@@ -105,25 +135,6 @@ Endpoints:
 - `GET /health`
 - `GET /v0/audit` only when audit mode is enabled
 
-## CLI relay workflow
-
-The relay workflow still requires users to exchange the invite and response files through a safe channel. Once sessions exist, messages can move through the blind relay.
-
-```bash
-export LLH_VAULT_PASSPHRASE='use a long local test passphrase'
-
-leftlevel-relay --relay-url http://127.0.0.1:8787 health
-leftlevel-relay --relay-url http://127.0.0.1:8787 send \
-  --session alice-session.llh.vault \
-  --passphrase "$LLH_VAULT_PASSPHRASE" \
-  --message 'hello over the relay'
-leftlevel-relay --relay-url http://127.0.0.1:8787 receive \
-  --session bob-session.llh.vault \
-  --passphrase "$LLH_VAULT_PASSPHRASE"
-```
-
-The relay receives only the encrypted envelope, mailbox ID, and authenticated header. It does not receive plaintext, usernames, accounts, phone numbers, or email addresses.
-
 ## Security status
 
 This is a working research prototype. Treat it as a foundation for design review and iteration, not something to use for sensitive real-world messages yet.
@@ -134,3 +145,5 @@ See:
 - `SECURITY_MODEL.md`
 - `ROADMAP.md`
 - `PRODUCTION_READINESS.md`
+- `docs/WORKING_PRODUCT_PLAN.md`
+- `docs/PROTECTION_MATRIX.md`
