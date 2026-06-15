@@ -4,6 +4,8 @@ import json
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
+import pytest
+
 from leftlevel_helix.app_store import AppStore
 from leftlevel_helix.client import HttpRelayClient
 from leftlevel_helix.identity import Identity
@@ -66,6 +68,40 @@ def test_app_store_contacts_and_history(tmp_path):
     assert views[0].trust_state == "unverified"
     assert views[0].sent == 1
     assert restored.history("bob")[0]["body"] == "hello"
+
+
+def test_rename_contact_preserves_session_trust_and_history(tmp_path):
+    alice, _bob = make_pair()
+    path = tmp_path / "store.llh.vault"
+    store = AppStore.create(str(path), "correct horse battery")
+    store.add_contact("bob", alice, verified=True)
+    before = store.load_session("bob").to_state_dict()
+    before_view = store.contact_views()[0]
+    store.record_message("bob", "sent", "hello")
+
+    store.rename_contact("bob", "robert")
+
+    with pytest.raises(ValueError, match="unknown contact"):
+        store.history("bob")
+    after = store.load_session("robert").to_state_dict()
+    after_view = store.contact_views()[0]
+    assert before == after
+    assert before_view.safety_short_code == after_view.safety_short_code
+    assert before_view.peer_fingerprint == after_view.peer_fingerprint
+    assert after_view.name == "robert"
+    assert after_view.trust_state == "verified"
+    assert after_view.sent == 1
+    assert store.history("robert")[0]["body"] == "hello"
+
+
+def test_rename_contact_rejects_collision(tmp_path):
+    alice, bob = make_pair()
+    path = tmp_path / "store.llh.vault"
+    store = AppStore.create(str(path), "correct horse battery")
+    store.add_contact("bob", alice)
+    store.add_contact("alice", bob)
+    with pytest.raises(ValueError, match="already exists"):
+        store.rename_contact("bob", "alice")
 
 
 def test_app_store_relay_product_flow(tmp_path):
