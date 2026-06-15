@@ -24,6 +24,10 @@ const LeftLevelApi = (() => {
       method: "POST",
       body: JSON.stringify({ base_name: baseName })
     }),
+    sendTestMessage: (fromName, toName, message) => request("/setup/test-message", {
+      method: "POST",
+      body: JSON.stringify({ from_name: fromName, to_name: toName, message })
+    }),
     createPairingInvite: (label) => request("/pairing/invite", {
       method: "POST",
       body: JSON.stringify({ label })
