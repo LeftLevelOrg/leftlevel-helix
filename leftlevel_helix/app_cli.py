@@ -45,6 +45,12 @@ def cmd_add_contact(args: argparse.Namespace) -> None:
     print(f"safety: {safety.short_code}")
 
 
+def cmd_rename_contact(args: argparse.Namespace) -> None:
+    store = _store(args)
+    store.rename_contact(args.old_name, args.new_name)
+    print(f"renamed contact: {args.old_name} -> {args.new_name}")
+
+
 def cmd_verify_contact(args: argparse.Namespace) -> None:
     store = _store(args)
     store.set_trust_state(args.name, "verified")
@@ -103,6 +109,11 @@ def main() -> None:
     p.add_argument("--session", required=True)
     p.add_argument("--verified", action="store_true")
     p.set_defaults(func=cmd_add_contact)
+
+    p = sub.add_parser("rename-contact")
+    p.add_argument("old_name")
+    p.add_argument("new_name")
+    p.set_defaults(func=cmd_rename_contact)
 
     p = sub.add_parser("verify-contact")
     p.add_argument("name")
