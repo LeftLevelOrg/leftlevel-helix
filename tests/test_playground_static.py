@@ -90,11 +90,26 @@ def test_playground_has_local_setup_panel():
     assert "pairing.next_action" in script
 
 
+def test_playground_has_security_indicator_legend():
+    markup = (PLAYGROUND / "index.html").read_text(encoding="utf-8")
+    styles = (PLAYGROUND / "styles.css").read_text(encoding="utf-8")
+    assert "Security indicators" in markup
+    assert "Green means verified" in markup
+    assert "Yellow means review first" in markup
+    assert "Red means stop and check" in markup
+    assert ".legend-item.secure" in styles
+    assert ".legend-item.review" in styles
+    assert ".legend-item.danger" in styles
+
+
 def test_playground_has_pairing_action_panel():
     markup = (PLAYGROUND / "index.html").read_text(encoding="utf-8")
     styles = (PLAYGROUND / "styles.css").read_text(encoding="utf-8")
     script = (PLAYGROUND / "app.js").read_text(encoding="utf-8")
-    assert "Pairing:" in markup
+    assert "Add friend" in markup
+    assert "Create friend invite" in markup
+    assert "Accept friend invite" in markup
+    assert "Finish adding friend" in markup
     assert 'id="createInviteButton"' in markup
     assert 'id="acceptInviteButton"' in markup
     assert 'id="finalizePairingButton"' in markup
@@ -103,6 +118,9 @@ def test_playground_has_pairing_action_panel():
     assert ".pairing-actions" in styles
     assert "writePairingOutput" in script
     assert "readPairingJson" in script
+    assert "create friend invite failed" in script
+    assert "accept friend invite failed" in script
+    assert "finish Add friend failed" in script
     assert "LeftLevelApi.createPairingInvite" in script
     assert "LeftLevelApi.acceptPairingInvite" in script
     assert "LeftLevelApi.finalizePairingResponse" in script
