@@ -105,6 +105,21 @@ def test_local_api_create_store_is_idempotent(tmp_path):
     assert result["setup"]["store_exists"] is True
 
 
+def test_local_api_create_test_friend(tmp_path):
+    path = tmp_path / "store.llh.vault"
+    AppStore.create(str(path), "correct horse battery")
+    service = LocalApiService(store_path=str(path), passphrase="correct horse battery")
+
+    result = service.create_test_friend("demo-friend")
+
+    assert result["status"] == "created"
+    assert result["friend"] == "demo-friend"
+    assert result["friend_peer"] == "demo-friend-peer"
+    assert result["setup"]["status"] == "ready"
+    assert result["setup"]["contact_count"] == 2
+    assert {contact["name"] for contact in service.contacts()} == {"demo-friend", "demo-friend-peer"}
+
+
 def test_local_api_pairing_actions_create_contacts(tmp_path):
     alice_path = tmp_path / "alice.llh.vault"
     bob_path = tmp_path / "bob.llh.vault"
@@ -168,6 +183,7 @@ def test_local_api_routes_exist(tmp_path):
     assert "/health" in routes
     assert "/setup/status" in routes
     assert "/setup/create" in routes
+    assert "/setup/test-friend" in routes
     assert "/pairing/invite" in routes
     assert "/pairing/accept" in routes
     assert "/pairing/finalize" in routes
