@@ -17,6 +17,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - Repository strategy for protocol, app, website, and relay separation.
 - UI extraction plan for the future `leftlevel-app` repository.
 - UI pairing flow documentation.
+- UI security-language guide for simple user wording and green/yellow/red indicators.
 - Release readiness gates and sign-off template.
 - Local interface testing guide.
 - Local API setup status endpoint.
@@ -25,7 +26,8 @@ All notable changes to LeftLevel Helix should be documented here.
 - App-store pairing draft storage.
 - Desktop playground local setup status panel.
 - Desktop playground pairing guidance in setup panel.
-- Desktop playground prototype pairing action panel.
+- Desktop playground prototype Add friend action panel.
+- Desktop playground security indicator legend.
 - Desktop playground attachment integrity panel.
 - Local API send and receive endpoints.
 - Playground send and receive button wiring.
@@ -35,6 +37,7 @@ All notable changes to LeftLevel Helix should be documented here.
 
 ### Changed
 
+- Desktop playground now uses user-facing Add friend language instead of protocol pairing language.
 - Desktop playground now displays trust states, setup readiness, pairing guidance, attachment states, and local API send and receive status messages.
 - Documentation now emphasizes security first, then fast and usable messaging.
 
