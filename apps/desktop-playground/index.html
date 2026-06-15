@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LeftLevel Playground</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="mark">LL</div>
+          <div>
+            <h1>LeftLevel</h1>
+            <p>Decentralized Privacy</p>
+          </div>
+        </div>
+
+        <button class="primary">Open encrypted store</button>
+
+        <section class="panel">
+          <div class="panel-title">Contacts</div>
+          <button class="contact active" data-contact="robert">
+            <span class="badge ok">OK</span>
+            <span>Robert</span>
+          </button>
+          <button class="contact" data-contact="maya">
+            <span class="badge new">NEW</span>
+            <span>Maya</span>
+          </button>
+          <button class="contact" data-contact="sam">
+            <span class="badge changed">CHANGED</span>
+            <span>Sam</span>
+          </button>
+        </section>
+      </aside>
+
+      <main class="conversation">
+        <header class="conversation-header">
+          <div>
+            <div class="eyebrow">Verified contact</div>
+            <h2 id="contactName">Robert</h2>
+            <p id="safetyCode">Safety: 123-456-789-012</p>
+          </div>
+          <div class="actions">
+            <button>Verify</button>
+            <button>Rename</button>
+            <button>Receive</button>
+          </div>
+        </header>
+
+        <section class="status-card">
+          <strong>Relay view:</strong>
+          <span>encrypted envelopes only · no usernames · no plaintext</span>
+        </section>
+
+        <section class="messages" id="messages">
+          <div class="message received">Hello from the encrypted local app store.</div>
+          <div class="message sent">Testing the LeftLevel playground UI.</div>
+        </section>
+
+        <footer class="composer">
+          <input id="messageInput" placeholder="Write a message…" />
+          <button id="sendButton">Send</button>
+        </footer>
+      </main>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
