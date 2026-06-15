@@ -19,6 +19,18 @@ const LeftLevelApi = (() => {
     defaultRelayUrl,
     health: () => request("/health"),
     setupStatus: () => request("/setup/status"),
+    createPairingInvite: (label) => request("/pairing/invite", {
+      method: "POST",
+      body: JSON.stringify({ label })
+    }),
+    acceptPairingInvite: (contactName, invite) => request("/pairing/accept", {
+      method: "POST",
+      body: JSON.stringify({ contact_name: contactName, invite })
+    }),
+    finalizePairingResponse: (draftId, contactName, response) => request("/pairing/finalize", {
+      method: "POST",
+      body: JSON.stringify({ draft_id: draftId, contact_name: contactName, response })
+    }),
     contacts: () => request("/contacts"),
     history: (name) => request(`/contacts/${encodeURIComponent(name)}/history`),
     verify: (name) => request(`/contacts/${encodeURIComponent(name)}/verify`, { method: "POST" }),
