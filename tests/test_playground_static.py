@@ -60,6 +60,7 @@ def test_playground_action_buttons_are_addressable():
 def test_playground_helper_exposes_contact_actions():
     helper = (PLAYGROUND / "api.js").read_text(encoding="utf-8")
     assert "inspectLinks:" in helper
+    assert "localMetrics:" in helper
     assert "setupStatus:" in helper
     assert "createStore:" in helper
     assert "createTestFriend:" in helper
@@ -74,6 +75,7 @@ def test_playground_helper_exposes_contact_actions():
     assert "send:" in helper
     assert "receive:" in helper
     assert "/links/inspect" in helper
+    assert "/metrics/local" in helper
     assert "/setup/status" in helper
     assert "/setup/create" in helper
     assert "/setup/test-friend" in helper
@@ -132,6 +134,19 @@ def test_playground_has_link_safety_notice():
     assert "link inspection blocked" in script
     assert "no obvious local parsing risk found" in script
     assert "Start the local API before inspecting links" in script
+
+
+def test_playground_has_local_metrics_panel():
+    markup = (PLAYGROUND / "index.html").read_text(encoding="utf-8")
+    script = (PLAYGROUND / "app.js").read_text(encoding="utf-8")
+    assert "Local metrics" in markup
+    assert "Local-only counts are never uploaded" in markup
+    assert 'id="metricsSummary"' in markup
+    assert 'id="localMetricsButton"' in markup
+    assert "LeftLevelApi.localMetrics" in script
+    assert "local-only metrics" in script
+    assert "upload disabled" in script
+    assert "nothing uploaded" in script
 
 
 def test_playground_renders_messages_as_plain_text_only():
