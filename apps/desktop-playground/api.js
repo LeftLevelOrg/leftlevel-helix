@@ -18,6 +18,10 @@ const LeftLevelApi = (() => {
     baseUrl,
     defaultRelayUrl,
     health: () => request("/health"),
+    inspectLinks: (text) => request("/links/inspect", {
+      method: "POST",
+      body: JSON.stringify({ text })
+    }),
     setupStatus: () => request("/setup/status"),
     createStore: () => request("/setup/create", { method: "POST" }),
     createTestFriend: (baseName) => request("/setup/test-friend", {
