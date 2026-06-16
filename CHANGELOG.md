@@ -20,6 +20,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - UI security-language guide for simple user wording and green/yellow/red indicators.
 - UI safe-automation guide for green/yellow/red send behavior.
 - Link and sandbox policy for hostile URLs, attachments, and app isolation.
+- URL validation worker contract documentation and typed request/result shapes.
 - Local link safety inspector for blocked schemes, private targets, HTTP warnings, user-info tricks, and IDN/punycode review.
 - Release readiness gates and sign-off template.
 - Local interface testing guide.
@@ -55,6 +56,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - Desktop playground now uses user-facing Add friend language instead of protocol pairing language.
 - Desktop playground now uses visible Add friend fields instead of prompt dialogs for invite and response JSON.
 - Desktop playground now displays trust states, setup readiness, link safety guidance, pairing guidance, attachment states, and local API send and receive status messages.
+- Release readiness validation now requires the URL validation worker contract documentation.
 - Documentation now emphasizes security first, then fast and usable messaging.
 
 ### Known limitations
