@@ -13,6 +13,7 @@ from .app_store import AppStore
 from .client import HttpRelayClient
 from .link_safety import analyze_links
 from .pairing_status import pairing_status_for_contact_count
+from .privacy_metrics import local_app_store_metrics, metrics_contract
 
 
 class RenameRequest(BaseModel):
@@ -82,6 +83,15 @@ class LocalApiService:
             "blocked_count": blocked,
             "warning_count": warnings,
             "findings": findings,
+        }
+
+    def local_metrics(self) -> dict[str, Any]:
+        store = self._store()
+        return {
+            "status": "local_only",
+            "upload_enabled": False,
+            "contract": metrics_contract(),
+            "metrics": local_app_store_metrics(store.state, opt_in=False).to_dict(),
         }
 
     def setup_status(self) -> dict[str, Any]:
@@ -216,6 +226,10 @@ def create_app(service: LocalApiService) -> FastAPI:
     @app.post("/links/inspect")
     def inspect_links(request: LinkInspectRequest):
         return handle(lambda: service.inspect_links(request.text))
+
+    @app.get("/metrics/local")
+    def local_metrics():
+        return handle(service.local_metrics)
 
     @app.get("/setup/status")
     def setup_status():
