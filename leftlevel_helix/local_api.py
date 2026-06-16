@@ -11,11 +11,16 @@ from pydantic import BaseModel
 
 from .app_store import AppStore
 from .client import HttpRelayClient
+from .link_safety import analyze_links
 from .pairing_status import pairing_status_for_contact_count
 
 
 class RenameRequest(BaseModel):
     new_name: str
+
+
+class LinkInspectRequest(BaseModel):
+    text: str
 
 
 class PairingInviteRequest(BaseModel):
@@ -66,6 +71,18 @@ class LocalApiService:
 
     def health(self) -> dict[str, str]:
         return {"status": "ok", "component": "leftlevel-local-api"}
+
+    def inspect_links(self, text: str) -> dict[str, Any]:
+        findings = [finding.to_dict() for finding in analyze_links(text)]
+        blocked = sum(1 for finding in findings if finding["verdict"] == "blocked")
+        warnings = sum(1 for finding in findings if finding["verdict"] == "warning")
+        return {
+            "status": "inspected",
+            "finding_count": len(findings),
+            "blocked_count": blocked,
+            "warning_count": warnings,
+            "findings": findings,
+        }
 
     def setup_status(self) -> dict[str, Any]:
         path_exists = os.path.exists(self.store_path)
@@ -195,6 +212,10 @@ def create_app(service: LocalApiService) -> FastAPI:
     @app.get("/health")
     def health():
         return service.health()
+
+    @app.post("/links/inspect")
+    def inspect_links(request: LinkInspectRequest):
+        return handle(lambda: service.inspect_links(request.text))
 
     @app.get("/setup/status")
     def setup_status():
