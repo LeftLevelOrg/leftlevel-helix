@@ -4,9 +4,9 @@ This guide explains how to view the current LeftLevel desktop playground and how
 
 ## Current status
 
-The interface is now more than a static mockup, but it is still a playground. It can show contacts, trust states, message history, local setup status, Add friend actions, composer behavior, attachment queue states, and attachment integrity states.
+The interface is now more than a static mockup, but it is still a playground. It can show contacts, trust states, message history, local setup status, Add friend actions, composer behavior, attachment queue states, attachment integrity states, and link safety guidance.
 
-The interface can call the local API for encrypted store creation, setup readiness, one-click test friend creation, one-click local test message delivery, prototype Add friend actions, message send, and message receive when the local API and test relay are running.
+The interface can call the local API for encrypted store creation, setup readiness, local link inspection, one-click test friend creation, one-click local test message delivery, prototype Add friend actions, message send, and message receive when the local API and test relay are running.
 
 It is not yet a packaged desktop app and should not be used for sensitive real-world messages.
 
@@ -30,6 +30,7 @@ Expected behavior:
 - the local setup panel shows that the local API is not connected;
 - the contact list appears;
 - trust states are visible;
+- link safety guidance is visible;
 - attachment integrity states are visible;
 - the composer supports long text and Unicode;
 - send adds a local demo message only.
@@ -68,6 +69,7 @@ Expected behavior:
 
 - the playground detects the local API;
 - Open encrypted store creates the configured local vault if it is missing;
+- Inspect links analyzes message text without opening URLs;
 - Create test friend creates a verified local test pair for development;
 - Send test message delivers a local encrypted loopback message between the test pair;
 - the local setup panel shows store readiness and contact count;
@@ -75,6 +77,19 @@ Expected behavior:
 - Send uses the local API message endpoint;
 - Receive uses the local API message endpoint;
 - the relay still handles encrypted envelopes only.
+
+## Link inspection
+
+The Inspect links button calls the local API link inspection endpoint.
+
+Local link inspection does not fetch the website and does not open the URL. It parses the text and can flag obvious risks such as blocked schemes, localhost or private-network targets, plain HTTP, user-info tricks, IP address links, and internationalized or punycode hostnames.
+
+Expected statuses:
+
+- no URLs found: no URL-looking text was detected;
+- no obvious local parsing risk found: the link still needs user judgment, but no local parsing rule flagged it;
+- warning: the link needs review first;
+- blocked: the link should not be opened.
 
 ## Open encrypted store
 
