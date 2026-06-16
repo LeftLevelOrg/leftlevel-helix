@@ -6,7 +6,7 @@ This guide explains how to view the current LeftLevel desktop playground and how
 
 The interface is now more than a static mockup, but it is still a playground. It can show contacts, trust states, message history, local setup status, Add friend actions, composer behavior, attachment queue states, attachment integrity states, and link safety guidance.
 
-The interface can call the local API for encrypted store creation, setup readiness, local link inspection, one-click test friend creation, one-click local test message delivery, prototype Add friend actions, message send, and message receive when the local API and test relay are running.
+The interface can call the local API for encrypted store creation, setup readiness, local link inspection, local-only aggregate metrics, one-click test friend creation, one-click local test message delivery, prototype Add friend actions, message send, and message receive when the local API and test relay are running.
 
 It is not yet a packaged desktop app and should not be used for sensitive real-world messages.
 
@@ -70,6 +70,7 @@ Expected behavior:
 - the playground detects the local API;
 - Open encrypted store creates the configured local vault if it is missing;
 - Inspect links analyzes message text without opening URLs;
+- local-only metrics can be read from the local API without uploading telemetry;
 - Create test friend creates a verified local test pair for development;
 - Send test message delivers a local encrypted loopback message between the test pair;
 - the local setup panel shows store readiness and contact count;
@@ -90,6 +91,18 @@ Expected statuses:
 - no obvious local parsing risk found: the link still needs user judgment, but no local parsing rule flagged it;
 - warning: the link needs review first;
 - blocked: the link should not be opened.
+
+## Local-only metrics
+
+The local metrics endpoint is:
+
+```text
+GET /metrics/local
+```
+
+It returns aggregate counters only and does not upload anything.
+
+Allowed local counters include friend counts by trust state and sent/received message counts. The endpoint must not expose contact names, message bodies, mailbox IDs, URLs, IP addresses, filenames, safety numbers, or fingerprints.
 
 ## Open encrypted store
 
