@@ -19,6 +19,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - UI pairing flow documentation.
 - UI security-language guide for simple user wording and green/yellow/red indicators.
 - UI safe-automation guide for green/yellow/red send behavior.
+- Link and sandbox policy for hostile URLs, attachments, and app isolation.
 - Release readiness gates and sign-off template.
 - Local interface testing guide.
 - Local API setup status endpoint.
@@ -37,6 +38,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - Desktop playground guided Add friend fields.
 - Desktop playground prototype Add friend action panel.
 - Desktop playground security indicator legend.
+- Desktop playground link safety notice.
 - Desktop playground send safety guard.
 - Desktop playground attachment integrity panel.
 - Local API send and receive endpoints.
@@ -49,13 +51,14 @@ All notable changes to LeftLevel Helix should be documented here.
 
 - Desktop playground now uses user-facing Add friend language instead of protocol pairing language.
 - Desktop playground now uses visible Add friend fields instead of prompt dialogs for invite and response JSON.
-- Desktop playground now displays trust states, setup readiness, pairing guidance, attachment states, and local API send and receive status messages.
+- Desktop playground now displays trust states, setup readiness, link safety guidance, pairing guidance, attachment states, and local API send and receive status messages.
 - Documentation now emphasizes security first, then fast and usable messaging.
 
 ### Known limitations
 
 - The interface is still a playground, not a packaged app.
 - Create test friend and Send test message are for local development only, not real friend verification.
+- Link handling is currently defensive plain-text rendering; a full external-link warning screen is not yet implemented.
 - Add friend still uses JSON copy/paste, not polished guided screens or file import/export.
 - Safety-number comparison is not yet fully UI-driven.
 - Attachment transfer is not yet fully wired through relay-backed UI flows.
