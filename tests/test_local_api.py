@@ -64,6 +64,27 @@ def test_local_api_inspect_links_without_opening_them(tmp_path):
     assert [finding["verdict"] for finding in result["findings"]] == ["review", "blocked"]
 
 
+def test_local_api_local_metrics_are_counts_only(tmp_path):
+    alice, _bob = make_pair()
+    path = tmp_path / "store.llh.vault"
+    store = AppStore.create(str(path), "correct horse battery")
+    store.add_contact("bob", alice, verified=True)
+    store.record_message("bob", "sent", "secret hello", mailbox_id="private-mailbox")
+
+    service = LocalApiService(store_path=str(path), passphrase="correct horse battery")
+    result = service.local_metrics()
+
+    assert result["status"] == "local_only"
+    assert result["upload_enabled"] is False
+    assert result["metrics"]["counters"]["friends_added"] == 1
+    assert result["metrics"]["counters"]["verified_friends"] == 1
+    assert result["metrics"]["counters"]["messages_sent"] == 1
+    serialized = repr(result)
+    assert "bob" not in serialized
+    assert "secret hello" not in serialized
+    assert "private-mailbox" not in serialized
+
+
 def test_local_api_setup_status_ready(tmp_path):
     alice, _bob = make_pair()
     path = tmp_path / "store.llh.vault"
@@ -214,6 +235,7 @@ def test_local_api_routes_exist(tmp_path):
     routes = {route.path for route in app.routes}
     assert "/health" in routes
     assert "/links/inspect" in routes
+    assert "/metrics/local" in routes
     assert "/setup/status" in routes
     assert "/setup/create" in routes
     assert "/setup/test-friend" in routes
