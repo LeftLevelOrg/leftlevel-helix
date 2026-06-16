@@ -258,6 +258,13 @@ function canSendToActiveContact() {
   return true;
 }
 
+function linkInspectionSummary(result) {
+  if (result.finding_count === 0) return "link inspection complete · no URLs found";
+  if (result.blocked_count > 0) return `link inspection blocked ${result.blocked_count} URL(s) · do not open`;
+  if (result.warning_count > 0) return `link inspection found ${result.warning_count} warning(s) · review first`;
+  return "link inspection complete · no obvious local parsing risk found";
+}
+
 document.querySelector("#openStoreButton").addEventListener("click", async () => {
   if (!apiOnline) {
     renderBridgeStatus("start the local API before opening the encrypted store");
@@ -270,6 +277,25 @@ document.querySelector("#openStoreButton").addEventListener("click", async () =>
     await loadContacts(activeContact);
   } catch (error) {
     renderBridgeStatus(`open encrypted store failed · ${error.message}`);
+  }
+});
+
+document.querySelector("#inspectLinksButton").addEventListener("click", async () => {
+  const text = inputValue("#messageInput");
+  if (!text) {
+    renderBridgeStatus("type or paste a message before inspecting links");
+    return;
+  }
+  if (!apiOnline) {
+    writePairingOutput("Start the local API before inspecting links.");
+    return;
+  }
+  try {
+    const result = await LeftLevelApi.inspectLinks(text);
+    writePairingOutput(result);
+    renderBridgeStatus(linkInspectionSummary(result));
+  } catch (error) {
+    writePairingOutput(`inspect links failed · ${error.message}`);
   }
 });
 
