@@ -32,7 +32,55 @@ Current playground behavior:
 
 - message bodies are rendered with `textContent`;
 - links are shown as plain text;
-- links are not made clickable automatically.
+- links are not made clickable automatically;
+- local link inspection can flag obvious parsing risks without opening the URL.
+
+## Local link inspection
+
+Local inspection should never fetch the website.
+
+It may inspect:
+
+- URL scheme;
+- normalized host;
+- localhost or private-network targets;
+- plain HTTP;
+- username/password text before the host;
+- IP address links;
+- internationalized or punycode hostnames.
+
+Local inspection can block obvious risky links, but it cannot prove a URL is safe.
+
+## Isolated URL validation
+
+Remote or active validation should run only in a disposable isolated worker, not in the main app.
+
+An isolated URL validation worker should have:
+
+- no vault access;
+- no contacts access;
+- no message history access;
+- no user cookies;
+- no user browser profile;
+- no local-network access;
+- no host filesystem write access except a temporary scratch directory;
+- no access to platform secrets;
+- a short timeout;
+- a fresh identity for each scan;
+- outbound network limited to the target and approved reputation services.
+
+The worker may collect:
+
+- redirect chain;
+- final host;
+- TLS certificate summary;
+- MIME type;
+- response size limits;
+- known-malware or known-phishing reputation results;
+- whether the page tries to trigger downloads;
+- whether the page tries to navigate to disallowed schemes.
+
+The worker must return a label such as `blocked`, `warning`, or `no obvious risk found`. It must not return `safe`, because scanners can miss zero-days and social engineering.
 
 ## Attachment safety rules
 
