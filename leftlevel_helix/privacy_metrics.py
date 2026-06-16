@@ -147,21 +147,22 @@ def validate_metrics_batch(batch: MetricsBatch) -> None:
 
 
 def _validate_metric_key(name: str, *, allowed: set[str], label: str) -> None:
+    if name in allowed:
+        return
     normalized = name.lower()
     if normalized in FORBIDDEN_KEYS:
         raise ValueError(f"forbidden privacy-sensitive {label}: {name}")
     if any(fragment in normalized for fragment in FORBIDDEN_KEY_FRAGMENTS):
         raise ValueError(f"forbidden privacy-sensitive {label}: {name}")
-    if name not in allowed:
-        raise ValueError(f"unsupported metrics {label}: {name}")
+    raise ValueError(f"unsupported metrics {label}: {name}")
 
 
 def _validate_metric_value(value: str) -> None:
     lowered = value.lower()
-    if "://" in lowered or "@" in lowered:
-        raise ValueError("metrics dimensions must not contain URLs or identifiers")
-    if any(fragment in lowered for fragment in ("http", "mailto", "tel:", "file:", "data:")):
+    if any(fragment in lowered for fragment in ("://", "http", "mailto", "tel:", "file:", "data:")):
         raise ValueError("metrics dimensions must not contain URL-like values")
+    if "@" in lowered:
+        raise ValueError("metrics dimensions must not contain URLs or identifiers")
 
 
 def metrics_contract() -> dict[str, object]:
