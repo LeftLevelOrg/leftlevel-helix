@@ -20,9 +20,11 @@ All notable changes to LeftLevel Helix should be documented here.
 - UI security-language guide for simple user wording and green/yellow/red indicators.
 - UI safe-automation guide for green/yellow/red send behavior.
 - Link and sandbox policy for hostile URLs, attachments, and app isolation.
+- Local link safety inspector for blocked schemes, private targets, HTTP warnings, user-info tricks, and IDN/punycode review.
 - Release readiness gates and sign-off template.
 - Local interface testing guide.
 - Local API setup status endpoint.
+- Local API link inspection endpoint.
 - Local API encrypted store create endpoint.
 - Local API test friend endpoint.
 - Local API test message endpoint.
@@ -34,6 +36,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - Desktop playground Open encrypted store automation.
 - Desktop playground Create test friend automation.
 - Desktop playground Send test message automation.
+- Desktop playground Inspect links action.
 - Desktop playground pairing guidance in setup panel.
 - Desktop playground guided Add friend fields.
 - Desktop playground prototype Add friend action panel.
@@ -58,7 +61,8 @@ All notable changes to LeftLevel Helix should be documented here.
 
 - The interface is still a playground, not a packaged app.
 - Create test friend and Send test message are for local development only, not real friend verification.
-- Link handling is currently defensive plain-text rendering; a full external-link warning screen is not yet implemented.
+- Link handling is currently defensive plain-text rendering and local parsing; isolated active URL detonation is designed but not implemented yet.
+- A full external-link warning screen is not yet implemented.
 - Add friend still uses JSON copy/paste, not polished guided screens or file import/export.
 - Safety-number comparison is not yet fully UI-driven.
 - Attachment transfer is not yet fully wired through relay-backed UI flows.
