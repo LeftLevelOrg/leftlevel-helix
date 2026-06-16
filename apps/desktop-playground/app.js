@@ -265,6 +265,14 @@ function linkInspectionSummary(result) {
   return "link inspection complete · no obvious local parsing risk found";
 }
 
+function localMetricsSummary(result) {
+  const counters = result.metrics?.counters || {};
+  const friends = counters.friends_added || 0;
+  const sent = counters.messages_sent || 0;
+  const received = counters.messages_received || 0;
+  return `local-only metrics · friends ${friends} · sent ${sent} · received ${received} · upload disabled`;
+}
+
 document.querySelector("#openStoreButton").addEventListener("click", async () => {
   if (!apiOnline) {
     renderBridgeStatus("start the local API before opening the encrypted store");
@@ -296,6 +304,23 @@ document.querySelector("#inspectLinksButton").addEventListener("click", async ()
     renderBridgeStatus(linkInspectionSummary(result));
   } catch (error) {
     writePairingOutput(`inspect links failed · ${error.message}`);
+  }
+});
+
+document.querySelector("#localMetricsButton").addEventListener("click", async () => {
+  if (!apiOnline) {
+    writePairingOutput("Start the local API before showing local metrics.");
+    return;
+  }
+  try {
+    const result = await LeftLevelApi.localMetrics();
+    const summary = localMetricsSummary(result);
+    const target = document.querySelector("#metricsSummary");
+    if (target) target.textContent = summary;
+    writePairingOutput(result);
+    renderBridgeStatus("local-only metrics shown · nothing uploaded");
+  } catch (error) {
+    writePairingOutput(`local metrics failed · ${error.message}`);
   }
 });
 
