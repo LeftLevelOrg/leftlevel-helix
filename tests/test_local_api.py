@@ -50,6 +50,20 @@ def test_local_api_service_contact_workflow(tmp_path):
     assert service.contacts()[0]["name"] == "robert"
 
 
+def test_local_api_inspect_links_without_opening_them(tmp_path):
+    path = tmp_path / "store.llh.vault"
+    AppStore.create(str(path), "correct horse battery")
+    service = LocalApiService(store_path=str(path), passphrase="correct horse battery")
+
+    result = service.inspect_links("Check https://example.com and javascript:alert(1)")
+
+    assert result["status"] == "inspected"
+    assert result["finding_count"] == 2
+    assert result["blocked_count"] == 1
+    assert result["warning_count"] == 0
+    assert [finding["verdict"] for finding in result["findings"]] == ["review", "blocked"]
+
+
 def test_local_api_setup_status_ready(tmp_path):
     alice, _bob = make_pair()
     path = tmp_path / "store.llh.vault"
@@ -199,6 +213,7 @@ def test_local_api_routes_exist(tmp_path):
     app = create_app(LocalApiService(store_path=str(path), passphrase="correct horse battery"))
     routes = {route.path for route in app.routes}
     assert "/health" in routes
+    assert "/links/inspect" in routes
     assert "/setup/status" in routes
     assert "/setup/create" in routes
     assert "/setup/test-friend" in routes
