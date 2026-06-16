@@ -27,6 +27,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - Local interface testing guide.
 - Local API setup status endpoint.
 - Local API link inspection endpoint.
+- Local API privacy-preserving local metrics endpoint.
 - Local API encrypted store create endpoint.
 - Local API test friend endpoint.
 - Local API test message endpoint.
@@ -54,6 +55,7 @@ All notable changes to LeftLevel Helix should be documented here.
 
 ### Changed
 
+- Privacy metrics validation now recognizes allowlisted aggregate counters before rejecting sensitive-looking field fragments.
 - Desktop playground now uses user-facing Add friend language instead of protocol pairing language.
 - Desktop playground now uses visible Add friend fields instead of prompt dialogs for invite and response JSON.
 - Desktop playground now displays trust states, setup readiness, link safety guidance, pairing guidance, attachment states, and local API send and receive status messages.
@@ -65,7 +67,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - The interface is still a playground, not a packaged app.
 - Create test friend and Send test message are for local development only, not real friend verification.
 - Link handling is currently defensive plain-text rendering and local parsing; isolated active URL detonation is designed but not implemented yet.
-- Privacy metrics are currently a local contract and aggregate helper; remote telemetry upload is not implemented yet.
+- Privacy metrics are currently local-only aggregate counters; remote telemetry upload is not implemented yet.
 - A full external-link warning screen is not yet implemented.
 - Add friend still uses JSON copy/paste, not polished guided screens or file import/export.
 - Safety-number comparison is not yet fully UI-driven.
