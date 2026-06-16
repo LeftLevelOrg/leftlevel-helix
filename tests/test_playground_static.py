@@ -59,6 +59,7 @@ def test_playground_action_buttons_are_addressable():
 
 def test_playground_helper_exposes_contact_actions():
     helper = (PLAYGROUND / "api.js").read_text(encoding="utf-8")
+    assert "inspectLinks:" in helper
     assert "setupStatus:" in helper
     assert "createStore:" in helper
     assert "createTestFriend:" in helper
@@ -72,6 +73,7 @@ def test_playground_helper_exposes_contact_actions():
     assert "rename:" in helper
     assert "send:" in helper
     assert "receive:" in helper
+    assert "/links/inspect" in helper
     assert "/setup/status" in helper
     assert "/setup/create" in helper
     assert "/setup/test-friend" in helper
@@ -121,9 +123,15 @@ def test_playground_has_security_indicator_legend():
 
 def test_playground_has_link_safety_notice():
     markup = (PLAYGROUND / "index.html").read_text(encoding="utf-8")
+    script = (PLAYGROUND / "app.js").read_text(encoding="utf-8")
     assert "Link safety" in markup
     assert "Links are shown as plain text" in markup
     assert "not made clickable automatically" in markup
+    assert 'id="inspectLinksButton"' in markup
+    assert "LeftLevelApi.inspectLinks" in script
+    assert "link inspection blocked" in script
+    assert "no obvious local parsing risk found" in script
+    assert "Start the local API before inspecting links" in script
 
 
 def test_playground_renders_messages_as_plain_text_only():
