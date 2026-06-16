@@ -22,6 +22,7 @@ REQUIRED_DOCS = {
     "docs/UI_TESTING_RULES.md": ["Wording changes", "Color and text indicators", "Expected failures during iteration"],
     "docs/UI_FRIEND_VERIFICATION.md": ["Verify action", "Safety boundary", "Future improvements"],
     "docs/UI_SAFE_AUTOMATION.md": ["Send behavior", "Verify behavior", "Automate routine safe paths"],
+    "docs/LINK_AND_SANDBOX_POLICY.md": ["Link safety rules", "Isolation direction", "Container limits"],
     "docs/LOCAL_INTERFACE_TESTING.md": ["Current status"],
 }
 
