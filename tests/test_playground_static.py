@@ -119,6 +119,23 @@ def test_playground_has_security_indicator_legend():
     assert ".legend-item.danger" in styles
 
 
+def test_playground_has_link_safety_notice():
+    markup = (PLAYGROUND / "index.html").read_text(encoding="utf-8")
+    assert "Link safety" in markup
+    assert "Links are shown as plain text" in markup
+    assert "not made clickable automatically" in markup
+
+
+def test_playground_renders_messages_as_plain_text_only():
+    script = (PLAYGROUND / "app.js").read_text(encoding="utf-8")
+    assert "item.textContent = message.body" in script
+    assert "messages.innerHTML = \"\"" in script
+    assert "item.innerHTML" not in script
+    assert "insertAdjacentHTML" not in script
+    assert "createElement(\"a\")" not in script
+    assert "href = message.body" not in script
+
+
 def test_playground_has_guided_add_friend_panel():
     markup = (PLAYGROUND / "index.html").read_text(encoding="utf-8")
     styles = (PLAYGROUND / "styles.css").read_text(encoding="utf-8")
