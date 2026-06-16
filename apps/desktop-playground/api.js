@@ -22,6 +22,7 @@ const LeftLevelApi = (() => {
       method: "POST",
       body: JSON.stringify({ text })
     }),
+    localMetrics: () => request("/metrics/local"),
     setupStatus: () => request("/setup/status"),
     createStore: () => request("/setup/create", { method: "POST" }),
     createTestFriend: (baseName) => request("/setup/test-friend", {
