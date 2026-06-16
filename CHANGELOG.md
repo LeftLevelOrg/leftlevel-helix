@@ -36,6 +36,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - App-store pairing draft storage.
 - App-store local test friend pair helper.
 - Desktop playground local setup status panel.
+- Desktop playground local metrics panel.
 - Desktop playground Open encrypted store automation.
 - Desktop playground Create test friend automation.
 - Desktop playground Send test message automation.
@@ -58,7 +59,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - Privacy metrics validation now recognizes allowlisted aggregate counters before rejecting sensitive-looking field fragments.
 - Desktop playground now uses user-facing Add friend language instead of protocol pairing language.
 - Desktop playground now uses visible Add friend fields instead of prompt dialogs for invite and response JSON.
-- Desktop playground now displays trust states, setup readiness, link safety guidance, pairing guidance, attachment states, and local API send and receive status messages.
+- Desktop playground now displays trust states, setup readiness, link safety guidance, local-only metrics, pairing guidance, attachment states, and local API send and receive status messages.
 - Release readiness validation now requires the URL validation worker and privacy metrics documentation.
 - Documentation now emphasizes security first, then fast and usable messaging.
 
