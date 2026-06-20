@@ -2,11 +2,19 @@ name: CI
 
 on:
   push:
+    branches: [main]
   pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
-  test:
+  tests-and-safety:
+    name: Tests and safety checks
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -14,9 +22,9 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
-      - name: Install package
+      - name: Install package with test dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e '.[dev]'
@@ -24,5 +32,8 @@ jobs:
       - name: Run portable tests
         run: python -m pytest -q -m 'not real_mlkem' -ra
 
-      - name: Validate release readiness docs
+      - name: Validate release readiness and secret scan
         run: python scripts/validate_release_readiness.py
+
+      - name: Run secret scan directly
+        run: python scripts/scan_for_secrets.py
