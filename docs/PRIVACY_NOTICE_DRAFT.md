@@ -92,12 +92,20 @@ We use permitted metrics to:
 
 We do not use essential service metrics or optional product telemetry for advertising, cross-app tracking, data broker sharing, or inferring private social graphs.
 
-## Retention placeholder
+## Retention
 
 Retention periods must be reviewed and finalized before production.
 
+Draft retention limits:
+
+- essential service aggregate metrics: up to 730 days;
+- optional product aggregate metrics: up to 365 days;
+- security and abuse aggregate metrics: up to 1095 days;
+- local-only user-visible counters: kept locally only and not uploaded.
+
 Draft direction:
 
+- retain aggregate metrics only;
 - keep aggregate service metrics only as long as needed for operations, security, and reliability;
 - delete or aggregate further when detailed counters are no longer needed;
 - do not retain raw event logs for product analytics.
