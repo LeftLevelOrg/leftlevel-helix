@@ -25,6 +25,7 @@ REQUIRED_DOCS = {
     "docs/LINK_AND_SANDBOX_POLICY.md": ["Link safety rules", "Isolated URL validation", "Container limits"],
     "docs/URL_VALIDATION_WORKER.md": ["Worker purpose", "Isolation requirements", "Forbidden verdicts", "Result format"],
     "docs/PRIVACY_PRESERVING_METRICS.md": ["Allowed metrics", "Forbidden data", "Consent model", "Aggregation rules"],
+    "docs/PRIVACY_TELEMETRY_EXPORT.md": ["Export requirements", "Export stub behavior", "Forbidden behavior", "Release boundary"],
     "docs/LOCAL_INTERFACE_TESTING.md": ["Current status"],
 }
 
