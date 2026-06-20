@@ -26,6 +26,7 @@ REQUIRED_DOCS = {
     "docs/URL_VALIDATION_WORKER.md": ["Worker purpose", "Isolation requirements", "Forbidden verdicts", "Result format"],
     "docs/ESSENTIAL_SERVICE_METRICS.md": ["Allowed essential service metrics", "Forbidden data", "Consent and notice", "Release boundary"],
     "docs/METRICS_RETENTION_POLICY.md": ["Retention categories", "Forbidden retained fields", "Release boundary"],
+    "docs/PRIVACY_CONTROLS.md": ["Essential service metrics", "Optional product telemetry", "Local diagnostics", "Release boundary"],
     "docs/PRIVACY_PRESERVING_METRICS.md": ["Metric categories", "Forbidden data", "Consent model", "Aggregation rules"],
     "docs/PRIVACY_TELEMETRY_EXPORT.md": ["Essential versus optional", "Export requirements", "Forbidden behavior", "Release boundary"],
     "docs/PRIVACY_NOTICE_DRAFT.md": ["Mandatory service metrics", "Optional product-improvement telemetry", "Retention", "Legal review checklist"],
