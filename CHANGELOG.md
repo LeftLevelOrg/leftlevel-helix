@@ -28,6 +28,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - Draft terms metrics disclosure language.
 - Privacy-preserving metrics contract and documentation.
 - Privacy telemetry export stub and export-boundary documentation.
+- Repository secret scanner and secret scan policy.
 - Local link safety inspector for blocked schemes, private targets, HTTP warnings, user-info tricks, and IDN/punycode review.
 - Release readiness gates and sign-off template.
 - Local interface testing guide.
@@ -63,6 +64,7 @@ All notable changes to LeftLevel Helix should be documented here.
 
 ### Changed
 
+- Release readiness validation now runs the repository secret scanner.
 - Metrics policy now separates mandatory essential service metrics from optional product-improvement telemetry.
 - Privacy controls now make optional product telemetry off by default and user-controllable.
 - Privacy notice draft now includes draft metrics retention limits.
