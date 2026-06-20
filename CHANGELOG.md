@@ -23,6 +23,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - URL validation worker contract documentation and typed request/result shapes.
 - Essential service metrics contract and documentation for mandatory disclosed operations metrics.
 - Metrics retention policy contract and documentation.
+- Privacy controls contract and documentation.
 - Draft privacy notice language for mandatory service metrics and optional telemetry.
 - Draft terms metrics disclosure language.
 - Privacy-preserving metrics contract and documentation.
@@ -62,12 +63,13 @@ All notable changes to LeftLevel Helix should be documented here.
 ### Changed
 
 - Metrics policy now separates mandatory essential service metrics from optional product-improvement telemetry.
+- Privacy controls now make optional product telemetry off by default and user-controllable.
 - Privacy notice draft now includes draft metrics retention limits.
 - Privacy metrics validation now recognizes allowlisted aggregate counters before rejecting sensitive-looking field fragments.
 - Desktop playground now uses user-facing Add friend language instead of protocol pairing language.
 - Desktop playground now uses visible Add friend fields instead of prompt dialogs for invite and response JSON.
 - Desktop playground now displays trust states, setup readiness, link safety guidance, local-only metrics, pairing guidance, attachment states, and local API send and receive status messages.
-- Release readiness validation now requires metrics retention, privacy notice, and terms metrics disclosure drafts.
+- Release readiness validation now requires privacy controls, metrics retention, privacy notice, and terms metrics disclosure drafts.
 - Release readiness validation now requires the URL validation worker, essential service metrics, privacy metrics, and privacy telemetry export documentation.
 - Documentation now emphasizes security first, then fast and usable messaging.
 
