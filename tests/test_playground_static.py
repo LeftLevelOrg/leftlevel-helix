@@ -149,6 +149,15 @@ def test_playground_has_local_metrics_panel():
     assert "nothing uploaded" in script
 
 
+def test_playground_has_privacy_controls_panel():
+    markup = (PLAYGROUND / "index.html").read_text(encoding="utf-8")
+    assert "Privacy controls" in markup
+    assert "Required service metrics: aggregate operations counts only" in markup
+    assert "Optional product telemetry: off by default and user-controllable" in markup
+    assert "Local diagnostics: local only and never uploaded by default" in markup
+    assert "privacy-controls-list" in markup
+
+
 def test_playground_renders_messages_as_plain_text_only():
     script = (PLAYGROUND / "app.js").read_text(encoding="utf-8")
     assert "item.textContent = message.body" in script
