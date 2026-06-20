@@ -22,6 +22,8 @@ All notable changes to LeftLevel Helix should be documented here.
 - Link and sandbox policy for hostile URLs, attachments, and app isolation.
 - URL validation worker contract documentation and typed request/result shapes.
 - Essential service metrics contract and documentation for mandatory disclosed operations metrics.
+- Draft privacy notice language for mandatory service metrics and optional telemetry.
+- Draft terms metrics disclosure language.
 - Privacy-preserving metrics contract and documentation.
 - Privacy telemetry export stub and export-boundary documentation.
 - Local link safety inspector for blocked schemes, private targets, HTTP warnings, user-info tricks, and IDN/punycode review.
@@ -63,6 +65,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - Desktop playground now uses user-facing Add friend language instead of protocol pairing language.
 - Desktop playground now uses visible Add friend fields instead of prompt dialogs for invite and response JSON.
 - Desktop playground now displays trust states, setup readiness, link safety guidance, local-only metrics, pairing guidance, attachment states, and local API send and receive status messages.
+- Release readiness validation now requires privacy notice and terms metrics disclosure drafts.
 - Release readiness validation now requires the URL validation worker, essential service metrics, privacy metrics, and privacy telemetry export documentation.
 - Documentation now emphasizes security first, then fast and usable messaging.
 
@@ -71,7 +74,7 @@ All notable changes to LeftLevel Helix should be documented here.
 - The interface is still a playground, not a packaged app.
 - Create test friend and Send test message are for local development only, not real friend verification.
 - Link handling is currently defensive plain-text rendering and local parsing; isolated active URL detonation is designed but not implemented yet.
-- Essential service metrics are a contract and documentation layer; production retention and privacy notice text are not complete yet.
+- Essential service metrics are a contract and documentation layer; production retention and final legal privacy notice text are not complete yet.
 - Privacy metrics are currently local-only aggregate counters; remote telemetry upload is not implemented yet.
 - The privacy telemetry export stub prepares validated payloads only and performs no network upload.
 - A full external-link warning screen is not yet implemented.
