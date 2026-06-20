@@ -1,14 +1,17 @@
 # Privacy Telemetry Export
 
-LeftLevel may eventually export product-health metrics, but export must be opt-in, aggregate-only, and privacy-contract enforced.
+LeftLevel may eventually export product-improvement telemetry, but optional telemetry export must be opt-in, aggregate-only, and privacy-contract enforced.
 
-This document defines the export boundary.
+Essential service metrics are handled separately as mandatory disclosed operations metrics.
+
+This document defines the optional telemetry export boundary.
 
 ## Current status
 
 Current implementation:
 
 - privacy metrics contract exists;
+- essential service metrics contract exists;
 - local-only metrics endpoint exists;
 - telemetry export preparation stub exists;
 - telemetry network upload is not implemented.
@@ -19,9 +22,25 @@ The app may count whether the product works.
 
 The app must not export who someone is, who they talk to, what they say, what links they receive, what files they receive, where they are, or which exact device they use.
 
+## Essential versus optional
+
+Essential service metrics:
+
+- are mandatory disclosed operations metrics;
+- support reliability, safety, abuse prevention, and scaling;
+- must be aggregate-only and minimized;
+- do not require opt-in when properly disclosed and necessary to operate the service.
+
+Optional product-improvement telemetry:
+
+- helps improve user experience;
+- should be opt-in before remote export;
+- must still be aggregate-only;
+- must still exclude all forbidden fields.
+
 ## Export requirements
 
-Telemetry export must require:
+Optional telemetry export must require:
 
 - explicit user consent;
 - an opt-in metrics batch;
@@ -49,20 +68,24 @@ The product must not:
 - upload raw event logs;
 - upload per-user timelines;
 - upload stable cross-context identifiers;
-- silently enable telemetry;
+- silently enable optional telemetry;
 - hide telemetry settings from the user;
 - use telemetry to infer social graphs;
 - include message text, contact identifiers, link destinations, or file metadata.
 
 ## User-facing language
 
-Recommended settings copy:
+Recommended settings copy for optional telemetry:
 
 > Help improve LeftLevel by sharing aggregate product-health counts. This never includes message content, contact names, links, files, device IDs, or precise location. You can turn this off at any time.
 
+Recommended notice language for essential service metrics:
+
+> LeftLevel collects limited aggregate service metrics needed to operate, secure, and support the service. These metrics do not include message content, contact names, links, files, device identifiers, precise location, safety numbers, or peer fingerprints.
+
 ## Release boundary
 
-Remote telemetry upload must not be enabled until:
+Remote optional telemetry upload must not be enabled until:
 
 - opt-in UI exists;
 - export payload review exists;
@@ -70,3 +93,11 @@ Remote telemetry upload must not be enabled until:
 - aggregation threshold enforcement is tested;
 - deletion/disable behavior is tested;
 - release sign-off confirms no forbidden fields are exported.
+
+Essential service metrics must not be enabled in production until:
+
+- privacy notice text exists;
+- terms language exists;
+- exported fields are reviewed;
+- no forbidden fields appear in payloads;
+- deletion and retention rules are documented.
