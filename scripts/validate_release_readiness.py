@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from scripts.scan_for_secrets import scan_path
+
 REQUIRED_DOCS = {
     "README.md": ["Security status"],
     "CHANGELOG.md": ["Unreleased", "Known limitations"],
@@ -31,6 +33,7 @@ REQUIRED_DOCS = {
     "docs/PRIVACY_TELEMETRY_EXPORT.md": ["Essential versus optional", "Export requirements", "Forbidden behavior", "Release boundary"],
     "docs/PRIVACY_NOTICE_DRAFT.md": ["Mandatory service metrics", "Optional product-improvement telemetry", "Retention", "Legal review checklist"],
     "docs/TERMS_METRICS_DISCLOSURE_DRAFT.md": ["Service operations metrics", "Optional product telemetry", "Legal review required"],
+    "docs/SECRET_SCAN_POLICY.md": ["Secret scanner", "Required gate", "If a secret is found"],
     "docs/LOCAL_INTERFACE_TESTING.md": ["Current status"],
 }
 
@@ -49,14 +52,22 @@ def validate_readiness_docs(root: Path = Path(".")) -> list[str]:
     return failures
 
 
+def validate_secret_scan(root: Path = Path(".")) -> list[str]:
+    return [f"secret scan finding: {finding.format()}" for finding in scan_path(root)]
+
+
+def validate_release_readiness(root: Path = Path(".")) -> list[str]:
+    return [*validate_readiness_docs(root), *validate_secret_scan(root)]
+
+
 def main() -> int:
-    failures = validate_readiness_docs()
+    failures = validate_release_readiness()
     if failures:
         print("Release readiness validation failed:")
         for failure in failures:
             print(f"- {failure}")
         return 1
-    print("Release readiness documentation checks passed.")
+    print("Release readiness checks passed.")
     return 0
 
 
