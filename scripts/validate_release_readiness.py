@@ -24,8 +24,9 @@ REQUIRED_DOCS = {
     "docs/UI_SAFE_AUTOMATION.md": ["Send behavior", "Verify behavior", "Automate routine safe paths"],
     "docs/LINK_AND_SANDBOX_POLICY.md": ["Link safety rules", "Isolated URL validation", "Container limits"],
     "docs/URL_VALIDATION_WORKER.md": ["Worker purpose", "Isolation requirements", "Forbidden verdicts", "Result format"],
-    "docs/PRIVACY_PRESERVING_METRICS.md": ["Allowed metrics", "Forbidden data", "Consent model", "Aggregation rules"],
-    "docs/PRIVACY_TELEMETRY_EXPORT.md": ["Export requirements", "Export stub behavior", "Forbidden behavior", "Release boundary"],
+    "docs/ESSENTIAL_SERVICE_METRICS.md": ["Allowed essential service metrics", "Forbidden data", "Consent and notice", "Release boundary"],
+    "docs/PRIVACY_PRESERVING_METRICS.md": ["Metric categories", "Forbidden data", "Consent model", "Aggregation rules"],
+    "docs/PRIVACY_TELEMETRY_EXPORT.md": ["Essential versus optional", "Export requirements", "Forbidden behavior", "Release boundary"],
     "docs/LOCAL_INTERFACE_TESTING.md": ["Current status"],
 }
 
