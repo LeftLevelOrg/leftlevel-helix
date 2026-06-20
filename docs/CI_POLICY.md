@@ -22,6 +22,26 @@ python scripts/validate_release_readiness.py
 
 This check ensures required release-readiness documents exist and contain key sections.
 
+## Secret scan validation
+
+CI runs the repository secret scan directly:
+
+```bash
+python scripts/scan_for_secrets.py
+```
+
+Release readiness validation also runs the secret scan.
+
+CI must fail if obvious secret material, forbidden environment files, private key files, local encrypted app stores, or sensitive deployment artifacts are committed.
+
+## Workflow permissions
+
+The CI workflow should use read-only repository contents permission.
+
+The workflow must not require AWS credentials, deployment credentials, or production secrets.
+
+Deployment workflows should be separate from this portable validation workflow and should use least-privilege access with environment approvals.
+
 ## Production readiness boundary
 
 Passing CI does not mean the project is production-ready.
