@@ -25,9 +25,10 @@ REQUIRED_DOCS = {
     "docs/LINK_AND_SANDBOX_POLICY.md": ["Link safety rules", "Isolated URL validation", "Container limits"],
     "docs/URL_VALIDATION_WORKER.md": ["Worker purpose", "Isolation requirements", "Forbidden verdicts", "Result format"],
     "docs/ESSENTIAL_SERVICE_METRICS.md": ["Allowed essential service metrics", "Forbidden data", "Consent and notice", "Release boundary"],
+    "docs/METRICS_RETENTION_POLICY.md": ["Retention categories", "Forbidden retained fields", "Release boundary"],
     "docs/PRIVACY_PRESERVING_METRICS.md": ["Metric categories", "Forbidden data", "Consent model", "Aggregation rules"],
     "docs/PRIVACY_TELEMETRY_EXPORT.md": ["Essential versus optional", "Export requirements", "Forbidden behavior", "Release boundary"],
-    "docs/PRIVACY_NOTICE_DRAFT.md": ["Mandatory service metrics", "Optional product-improvement telemetry", "Legal review checklist"],
+    "docs/PRIVACY_NOTICE_DRAFT.md": ["Mandatory service metrics", "Optional product-improvement telemetry", "Retention", "Legal review checklist"],
     "docs/TERMS_METRICS_DISCLOSURE_DRAFT.md": ["Service operations metrics", "Optional product telemetry", "Legal review required"],
     "docs/LOCAL_INTERFACE_TESTING.md": ["Current status"],
 }
